@@ -14,7 +14,8 @@
         include("vues/v_headerDeconnexion.php");
     }else{
         include("vues/v_header.php");
-    }    
+    }
+    var_dump($_SESSION); 
     switch($uc)
     {
         case 'accueil':

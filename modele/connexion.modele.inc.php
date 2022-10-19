@@ -137,6 +137,7 @@ function getCountMatricule()
     }
 }
 
+
 /* ANCIENNES FONCTIONS QUI A PERMIS DE SET LES LOGINS, LES HABILITATIONS ET LA MONNAIE DES MEDOCS
 
 function concatMotDePasseBrut($mat) : string {
