@@ -7,10 +7,23 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 switch ($action) {
 	case 'formulairemedec': {
 
-			if (isset($_SESSION['login'])) {
-				header('Location: index.php?uc=medecin&action=');
+			$result = getAllNomPraticien();
+			include("vues/v_formulaireMedicament.php");
+			break;
+		}
+
+	case 'affichermedec': {
+
+			if (isset($_REQUEST['medecin']) && getAllInformationMedicamentDepot($_REQUEST['medecin'])) {
+				$mede = $_REQUEST['medecin'];
+				$carac = getAllInformationMedicamentDepot($mede);
+				if (empty($carac[7])) {
+					$carac[7] = 'Non défini(e)';
+				}
+				include("vues/v_afficherMedecin.php");
 			} else {
-				include("vues/v_connexion.php");
+				$_SESSION['erreur'] = true;
+				header("Location: index.php?uc=medecin&action=formulairemedec");
 			}
 			break;
 		}
