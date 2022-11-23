@@ -21,17 +21,25 @@
                                 echo
                                 '<li class="pb-2">
                                     <i class=\'bx-fw bx bxs-chevron-right bx-xs\'></i><a class="text-decoration-none text-light py-1" href="index.php?uc=medicaments&action=formulairemedoc">Médicaments</a>
-                                </li>
-                                <li class="pb-2">
-                                    <i class=\'bx-fw bx bxs-chevron-right bx-xs\'></i><a class="text-decoration-none text-light py-1" href="index.php?uc=praticiens&action=formulairepraticien">Praticiens</a>
-                                </li>
+                                </li>';
+                                if($_SESSION['habilitation'] == 2){
+                                    $action='gerermedecin';
+                                } else {
+                                    $action='formulairepraticien';
+                                }
+                                echo
+                                    '<li class="pb-2">
+                                        <i class=\'bx-fw bx bxs-chevron-right bx-xs\'></i><a class="text-decoration-none text-light py-1" href="index.php?uc=praticien&action='.$action.'">Praticiens</a>
+                                    </li>';
+                                echo '
                                 <li class="pb-2 dropdown">
                                     <i class=\'bx-fw bx bxs-chevron-right bx-xs\'></i><a class="text-decoration-none text-light py-1" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Rapport de visite</a>
                                     <ul class="dropdown-menu dropdown-menu-dark p-0">
                                         <li><a class="dropdown-item" href="index.php?uc=rapportdevisite&action=redigerrapport">Rédiger un rapport</a></li>
                                         <li><a class="dropdown-item" href="index.php?uc=rapportdevisite&action=mesrapports">Mes rapports</a></li>';
                                 if ($_SESSION['habilitation'] == 2) echo '<li><a class="dropdown-item" href="index.php?uc=rapportdevisite&action=rapportregion">Rapport de ma région</a></li>';
-                                echo '</ul>
+                                echo 
+                                '</ul>
                                 </li>
                                 <li class="pb-2">
                                         <i class="bx-fw bx bxs-chevron-right bx-xs"></i><a class="text-decoration-none text-light py-1" href="index.php?uc=connexion&action=profil">Profil</a>
