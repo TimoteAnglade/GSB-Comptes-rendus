@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 19 oct. 2022 à 13:34
+-- Généré le : mer. 23 nov. 2022 à 15:14
 -- Version du serveur : 10.6.5-MariaDB
 -- Version de PHP : 8.0.13
 
@@ -378,27 +378,46 @@ INSERT INTO `medicament` (`MED_DEPOTLEGAL`, `MED_NOMCOMMERCIAL`, `FAM_CODE`, `ME
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `motif`
+--
+
+DROP TABLE IF EXISTS `motif`;
+CREATE TABLE IF NOT EXISTS `motif` (
+  `MOT_CODE` varchar(15) NOT NULL,
+  `MOT_LIBELLE` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`MOT_CODE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Déchargement des données de la table `motif`
+--
+
+INSERT INTO `motif` (`MOT_CODE`, `MOT_LIBELLE`) VALUES
+('Autre', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `offrir`
 --
 
 DROP TABLE IF EXISTS `offrir`;
 CREATE TABLE IF NOT EXISTS `offrir` (
-  `COL_MATRICULE` varchar(10) NOT NULL,
   `RAP_NUM` int(11) NOT NULL,
   `MED_DEPOTLEGAL` varchar(10) NOT NULL,
   `OFF_QTE` int(11) DEFAULT NULL,
-  PRIMARY KEY (`COL_MATRICULE`,`RAP_NUM`,`MED_DEPOTLEGAL`),
+  PRIMARY KEY (`RAP_NUM`,`MED_DEPOTLEGAL`),
   KEY `MED_DEPOTLEGAL` (`MED_DEPOTLEGAL`),
-  KEY `VIS_MATRICULE` (`COL_MATRICULE`,`RAP_NUM`)
+  KEY `VIS_MATRICULE` (`RAP_NUM`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `offrir`
 --
 
-INSERT INTO `offrir` (`COL_MATRICULE`, `RAP_NUM`, `MED_DEPOTLEGAL`, `OFF_QTE`) VALUES
-('a17', 4, '3MYC7', 3),
-('a17', 4, 'AMOX45', 12);
+INSERT INTO `offrir` (`RAP_NUM`, `MED_DEPOTLEGAL`, `OFF_QTE`) VALUES
+(4, '3MYC7', 3),
+(4, 'AMOX45', 12);
 
 -- --------------------------------------------------------
 
@@ -431,8 +450,10 @@ CREATE TABLE IF NOT EXISTS `praticien` (
   `PRA_ADRESSE` varchar(50) DEFAULT NULL,
   `PRA_CP` varchar(5) DEFAULT NULL,
   `PRA_VILLE` varchar(25) DEFAULT NULL,
-  `PRA_COEFNOTORIETE` float DEFAULT NULL,
+  `PRA_COEFNOTORIETE` float NOT NULL DEFAULT 1,
+  `PRA_COEFCONFIANCE` float NOT NULL DEFAULT 1,
   `TYP_CODE` varchar(3) NOT NULL,
+  `REG_CODE` varchar(2) NOT NULL,
   PRIMARY KEY (`PRA_NUM`),
   KEY `TYP_CODE` (`TYP_CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -441,93 +462,93 @@ CREATE TABLE IF NOT EXISTS `praticien` (
 -- Déchargement des données de la table `praticien`
 --
 
-INSERT INTO `praticien` (`PRA_NUM`, `PRA_NOM`, `PRA_PRENOM`, `PRA_ADRESSE`, `PRA_CP`, `PRA_VILLE`, `PRA_COEFNOTORIETE`, `TYP_CODE`) VALUES
-(1, 'Notini', 'Alain', '114 r Authie', '85000', 'LA ROCHE SUR YON', 290.03, 'MH'),
-(2, 'Gosselin', 'Albert', '13 r Devon', '41000', 'BLOIS', 307.49, 'MV'),
-(3, 'Delahaye', 'André', '36 av 6 Juin', '25000', 'BESANCON', 185.79, 'PS'),
-(4, 'Leroux', 'André', '47 av Robert Schuman', '60000', 'BEAUVAIS', 172.04, 'PH'),
-(5, 'Desmoulins', 'Anne', '31 r St Jean', '30000', 'NIMES', 94.75, 'PO'),
-(6, 'Mouel', 'Anne', '27 r Auvergne', '80000', 'AMIENS', 45.2, 'MH'),
-(7, 'Desgranges-Lentz', 'Antoine', '1 r Albert de Mun', '29000', 'MORLAIX', 20.07, 'MV'),
-(8, 'Marcouiller', 'Arnaud', '31 r St Jean', '68000', 'MULHOUSE', 396.52, 'PS'),
-(9, 'Dupuy', 'Benoit', '9 r Demolombe', '34000', 'MONTPELLIER', 395.66, 'PH'),
-(10, 'Lerat', 'Bernard', '31 r St Jean', '59000', 'LILLE', 257.79, 'PO'),
-(11, 'Marçais-Lefebvre', 'Bertrand', '86Bis r Basse', '67000', 'STRASBOURG', 450.96, 'MH'),
-(12, 'Boscher', 'Bruno', '94 r Falaise', '10000', 'TROYES', 356.14, 'MV'),
-(13, 'Morel', 'Catherine', '21 r Chateaubriand', '75000', 'PARIS', 379.57, 'PS'),
-(14, 'Guivarch', 'Chantal', '4 av Gén Laperrine', '45000', 'ORLEANS', 114.56, 'PH'),
-(15, 'Bessin-Grosdoit', 'Christophe', '92 r Falaise', '6000', 'NICE', 222.06, 'PO'),
-(16, 'Rossa', 'Claire', '14 av Thiès', '6000', 'NICE', 529.78, 'MH'),
-(17, 'Cauchy', 'Denis', '5 av Ste Thérèse', '11000', 'NARBONNE', 458.82, 'MV'),
-(18, 'Gaffé', 'Dominique', '9 av 1ère Armée Française', '35000', 'RENNES', 213.4, 'PS'),
-(19, 'Guenon', 'Dominique', '98 bd Mar Lyautey', '44000', 'NANTES', 175.89, 'PH'),
-(20, 'Prévot', 'Dominique', '29 r Lucien Nelle', '87000', 'LIMOGES', 151.36, 'PO'),
-(21, 'Houchard', 'Eliane', '9 r Demolombe', '49100', 'ANGERS', 436.96, 'MH'),
-(22, 'Desmons', 'Elisabeth', '51 r Bernières', '29000', 'QUIMPER', 281.17, 'MV'),
-(23, 'Flament', 'Elisabeth', '11 r Pasteur', '35000', 'RENNES', 315.6, 'PS'),
-(24, 'Goussard', 'Emmanuel', '9 r Demolombe', '41000', 'BLOIS', 40.72, 'PH'),
-(25, 'Desprez', 'Eric', '9 r Vaucelles', '33000', 'BORDEAUX', 406.85, 'PO'),
-(26, 'Coste', 'Evelyne', '29 r Lucien Nelle', '19000', 'TULLE', 441.87, 'MH'),
-(27, 'Lefebvre', 'Frédéric', '2 pl Wurzburg', '55000', 'VERDUN', 573.63, 'MV'),
-(28, 'Lemée', 'Frédéric', '29 av 6 Juin', '56000', 'VANNES', 326.4, 'PS'),
-(29, 'Martin', 'Frédéric', 'Bât A 90 r Bayeux', '70000', 'VESOUL', 506.06, 'PH'),
-(30, 'Marie', 'Frédérique', '172 r Caponière', '70000', 'VESOUL', 313.31, 'PO'),
-(31, 'Rosenstech', 'Geneviève', '27 r Auvergne', '75000', 'PARIS', 366.82, 'MH'),
-(32, 'Pontavice', 'Ghislaine', '8 r Gaillon', '86000', 'POITIERS', 265.58, 'MV'),
-(33, 'Leveneur-Mosquet', 'Guillaume', '47 av Robert Schuman', '64000', 'PAU', 184.97, 'PS'),
-(34, 'Blanchais', 'Guy', '30 r Authie', '8000', 'SEDAN', 502.48, 'PH'),
-(35, 'Leveneur', 'Hugues', '7 pl St Gilles', '62000', 'ARRAS', 7.39, 'PO'),
-(36, 'Mosquet', 'Isabelle', '22 r Jules Verne', '76000', 'ROUEN', 77.1, 'MH'),
-(37, 'Giraudon', 'Jean-Christophe', '1 r Albert de Mun', '38100', 'VIENNE', 92.62, 'MV'),
-(38, 'Marie', 'Jean-Claude', '26 r Hérouville', '69000', 'LYON', 120.1, 'PS'),
-(39, 'Maury', 'Jean-François', '5 r Pierre Girard', '71000', 'CHALON SUR SAONE', 13.73, 'PH'),
-(40, 'Dennel', 'Jean-Louis', '7 pl St Gilles', '28000', 'CHARTRES', 550.69, 'PO'),
-(41, 'Ain', 'Jean-Pierre', '4 résid Olympia', '2000', 'LAON', 5.59, 'MH'),
-(42, 'Chemery', 'Jean-Pierre', '51 pl Ancienne Boucherie', '14000', 'CAEN', 396.58, 'MV'),
-(43, 'Comoz', 'Jean-Pierre', '35 r Auguste Lechesne', '18000', 'BOURGES', 340.35, 'PS'),
-(44, 'Desfaudais', 'Jean-Pierre', '7 pl St Gilles', '29000', 'BREST', 71.76, 'PH'),
-(45, 'Phan', 'JérÃ´me', '9 r Clos Caillet', '79000', 'NIORT', 451.61, 'PO'),
-(46, 'Riou', 'Line', '43 bd Gén Vanier', '77000', 'MARNE LA VALLEE', 193.25, 'MH'),
-(47, 'Chubilleau', 'Louis', '46 r Eglise', '17000', 'SAINTES', 202.07, 'MV'),
-(48, 'Lebrun', 'Lucette', '178 r Auge', '54000', 'NANCY', 410.41, 'PS'),
-(49, 'Goessens', 'Marc', '6 av 6 Juin', '39000', 'DOLE', 548.57, 'PH'),
-(50, 'Laforge', 'Marc', '5 résid Prairie', '50000', 'SAINT LO', 265.05, 'PO'),
-(51, 'Millereau', 'Marc', '36 av 6 Juin', '72000', 'LA FERTE BERNARD', 430.42, 'MH'),
-(52, 'Dauverne', 'Marie-Christine', '69 av Charlemagne', '21000', 'DIJON', 281.05, 'MV'),
-(53, 'Vittorio', 'Myriam', '3 pl Champlain', '94000', 'BOISSY SAINT LEGER', 356.23, 'PS'),
-(54, 'Lapasset', 'Nhieu', '31 av 6 Juin', '52000', 'CHAUMONT', 107, 'PH'),
-(55, 'Plantet-Besnier', 'Nicole', '10 av 1ère Armée Française', '86000', 'CHATELLEREAULT', 369.94, 'PO'),
-(56, 'Chubilleau', 'Pascal', '3 r Hastings', '15000', 'AURRILLAC', 290.75, 'MH'),
-(57, 'Robert', 'Pascal', '31 r St Jean', '93000', 'BOBIGNY', 162.41, 'MV'),
-(58, 'Jean', 'Pascale', '114 r Authie', '49100', 'SAUMUR', 375.52, 'PS'),
-(59, 'Chanteloube', 'Patrice', '14 av Thiès', '13000', 'MARSEILLE', 478.01, 'PH'),
-(60, 'Lecuirot', 'Patrice', 'résid St Pères 55 r Pigacière', '54000', 'NANCY', 239.66, 'PO'),
-(61, 'Gandon', 'Patrick', '47 av Robert Schuman', '37000', 'TOURS', 599.06, 'MH'),
-(62, 'Mirouf', 'Patrick', '22 r Puits Picard', '74000', 'ANNECY', 458.42, 'MV'),
-(63, 'Boireaux', 'Philippe', '14 av Thiès', '10000', 'CHALON EN CHAMPAGNE', 454.48, 'PS'),
-(64, 'Cendrier', 'Philippe', '7 pl St Gilles', '12000', 'RODEZ', 164.16, 'PH'),
-(65, 'Duhamel', 'Philippe', '114 r Authie', '34000', 'MONTPELLIER', 98.62, 'PO'),
-(66, 'Grigy', 'Philippe', '15 r Mélingue', '44000', 'CLISSON', 285.1, 'MH'),
-(67, 'Linard', 'Philippe', '1 r Albert de Mun', '81000', 'ALBI', 486.3, 'MV'),
-(68, 'Lozier', 'Philippe', '8 r Gaillon', '31000', 'TOULOUSE', 48.4, 'PS'),
-(69, 'Dechâtre', 'Pierre', '63 av Thiès', '23000', 'MONTLUCON', 253.75, 'PH'),
-(70, 'Goessens', 'Pierre', '22 r Jean Romain', '40000', 'MONT DE MARSAN', 426.19, 'PO'),
-(71, 'Leménager', 'Pierre', '39 av 6 Juin', '57000', 'METZ', 118.7, 'MH'),
-(72, 'Née', 'Pierre', '39 av 6 Juin', '82000', 'MONTAUBAN', 72.54, 'MV'),
-(73, 'Guyot', 'Pierre-Laurent', '43 bd Gén Vanier', '48000', 'MENDE', 352.31, 'PS'),
-(74, 'Chauchard', 'Roger', '9 r Vaucelles', '13000', 'MARSEILLE', 552.19, 'PH'),
-(75, 'Mabire', 'Roland', '11 r Boutiques', '67000', 'STRASBOURG', 422.39, 'PO'),
-(76, 'Leroy', 'Soazig', '45 r Boutiques', '61000', 'ALENCON', 570.67, 'MH'),
-(77, 'Guyot', 'Stéphane', '26 r Hérouville', '46000', 'FIGEAC', 28.85, 'MV'),
-(78, 'Delposen', 'Sylvain', '39 av 6 Juin', '27000', 'DREUX', 292.01, 'PS'),
-(79, 'Rault', 'Sylvie', '15 bd Richemond', '2000', 'SOISSON', 526.6, 'PH'),
-(80, 'Renouf', 'Sylvie', '98 bd Mar Lyautey', '88000', 'EPINAL', 425.24, 'PO'),
-(81, 'Alliet-Grach', 'Thierry', '14 av Thiès', '7000', 'PRIVAS', 451.31, 'MH'),
-(82, 'Bayard', 'Thierry', '92 r Falaise', '42000', 'SAINT ETIENNE', 271.71, 'MV'),
-(83, 'Gauchet', 'Thierry', '7 r Desmoueux', '38100', 'GRENOBLE', 406.1, 'PS'),
-(84, 'Bobichon', 'Tristan', '219 r Caponière', '9000', 'FOIX', 218.36, 'PH'),
-(85, 'Duchemin-Laniel', 'Véronique', '130 r St Jean', '33000', 'LIBOURNE', 265.61, 'PO'),
-(86, 'Laurent', 'Younès', '34 r Demolombe', '53000', 'MAYENNE', 496.1, 'MH');
+INSERT INTO `praticien` (`PRA_NUM`, `PRA_NOM`, `PRA_PRENOM`, `PRA_ADRESSE`, `PRA_CP`, `PRA_VILLE`, `PRA_COEFNOTORIETE`, `PRA_COEFCONFIANCE`, `TYP_CODE`, `REG_CODE`) VALUES
+(1, 'Notini', 'Alain', '114 r Authie', '85000', 'LA ROCHE SUR YON', 290.03, 1, 'MH', 'PL'),
+(2, 'Gosselin', 'Albert', '13 r Devon', '41000', 'BLOIS', 307.49, 1, 'MV', 'CE'),
+(3, 'Delahaye', 'André', '36 av 6 Juin', '25000', 'BESANCON', 185.79, 1, 'PS', 'BO'),
+(4, 'Leroux', 'André', '47 av Robert Schuman', '60000', 'BEAUVAIS', 172.04, 1, 'PH', 'HF'),
+(5, 'Desmoulins', 'Anne', '31 r St Jean', '30000', 'NIMES', 94.75, 1, 'PO', 'OC'),
+(6, 'Mouel', 'Anne', '27 r Auvergne', '80000', 'AMIENS', 45.2, 1, 'MH', 'HF'),
+(7, 'Desgranges-Lentz', 'Antoine', '1 r Albert de Mun', '29000', 'MORLAIX', 20.07, 1, 'MV', 'BG'),
+(8, 'Marcouiller', 'Arnaud', '31 r St Jean', '68000', 'MULHOUSE', 396.52, 1, 'PS', 'GE'),
+(9, 'Dupuy', 'Benoit', '9 r Demolombe', '34000', 'MONTPELLIER', 395.66, 1, 'PH', 'OC'),
+(10, 'Lerat', 'Bernard', '31 r St Jean', '59000', 'LILLE', 257.79, 1, 'PO', 'HF'),
+(11, 'Marçais-Lefebvre', 'Bertrand', '86Bis r Basse', '67000', 'STRASBOURG', 450.96, 1, 'MH', 'GE'),
+(12, 'Boscher', 'Bruno', '94 r Falaise', '10000', 'TROYES', 356.14, 1, 'MV', 'GE'),
+(13, 'Morel', 'Catherine', '21 r Chateaubriand', '75000', 'PARIS', 379.57, 1, 'PS', 'IF'),
+(14, 'Guivarch', 'Chantal', '4 av Gén Laperrine', '45000', 'ORLEANS', 114.56, 1, 'PH', 'CE'),
+(15, 'Bessin-Grosdoit', 'Christophe', '92 r Falaise', '6000', 'NICE', 222.06, 1, 'PO', 'PA'),
+(16, 'Rossa', 'Claire', '14 av Thiès', '6000', 'NICE', 529.78, 1, 'MH', 'PA'),
+(17, 'Cauchy', 'Denis', '5 av Ste Thérèse', '11000', 'NARBONNE', 458.82, 1, 'MV', 'OC'),
+(18, 'Gaffé', 'Dominique', '9 av 1ère Armée Française', '35000', 'RENNES', 213.4, 1, 'PS', 'BG'),
+(19, 'Guenon', 'Dominique', '98 bd Mar Lyautey', '44000', 'NANTES', 175.89, 1, 'PH', 'PL'),
+(20, 'Prévot', 'Dominique', '29 r Lucien Nelle', '87000', 'LIMOGES', 151.36, 1, 'PO', 'NA'),
+(21, 'Houchard', 'Eliane', '9 r Demolombe', '49100', 'ANGERS', 436.96, 1, 'MH', 'PL'),
+(22, 'Desmons', 'Elisabeth', '51 r Bernières', '29000', 'QUIMPER', 281.17, 1, 'MV', 'BG'),
+(23, 'Flament', 'Elisabeth', '11 r Pasteur', '35000', 'RENNES', 315.6, 1, 'PS', 'BG'),
+(24, 'Goussard', 'Emmanuel', '9 r Demolombe', '41000', 'BLOIS', 40.72, 1, 'PH', 'CE'),
+(25, 'Desprez', 'Eric', '9 r Vaucelles', '33000', 'BORDEAUX', 406.85, 1, 'PO', 'NA'),
+(26, 'Coste', 'Evelyne', '29 r Lucien Nelle', '19000', 'TULLE', 441.87, 1, 'MH', ''),
+(27, 'Lefebvre', 'Frédéric', '2 pl Wurzburg', '55000', 'VERDUN', 573.63, 1, 'MV', ''),
+(28, 'Lemée', 'Frédéric', '29 av 6 Juin', '56000', 'VANNES', 326.4, 1, 'PS', ''),
+(29, 'Martin', 'Frédéric', 'Bât A 90 r Bayeux', '70000', 'VESOUL', 506.06, 1, 'PH', ''),
+(30, 'Marie', 'Frédérique', '172 r Caponière', '70000', 'VESOUL', 313.31, 1, 'PO', ''),
+(31, 'Rosenstech', 'Geneviève', '27 r Auvergne', '75000', 'PARIS', 366.82, 1, 'MH', ''),
+(32, 'Pontavice', 'Ghislaine', '8 r Gaillon', '86000', 'POITIERS', 265.58, 1, 'MV', ''),
+(33, 'Leveneur-Mosquet', 'Guillaume', '47 av Robert Schuman', '64000', 'PAU', 184.97, 1, 'PS', ''),
+(34, 'Blanchais', 'Guy', '30 r Authie', '8000', 'SEDAN', 502.48, 1, 'PH', ''),
+(35, 'Leveneur', 'Hugues', '7 pl St Gilles', '62000', 'ARRAS', 7.39, 1, 'PO', 'HF'),
+(36, 'Mosquet', 'Isabelle', '22 r Jules Verne', '76000', 'ROUEN', 77.1, 1, 'MH', ''),
+(37, 'Giraudon', 'Jean-Christophe', '1 r Albert de Mun', '38100', 'VIENNE', 92.62, 1, 'MV', ''),
+(38, 'Marie', 'Jean-Claude', '26 r Hérouville', '69000', 'LYON', 120.1, 1, 'PS', ''),
+(39, 'Maury', 'Jean-François', '5 r Pierre Girard', '71000', 'CHALON SUR SAONE', 13.73, 1, 'PH', 'BO'),
+(40, 'Dennel', 'Jean-Louis', '7 pl St Gilles', '28000', 'CHARTRES', 550.69, 1, 'PO', 'CE'),
+(41, 'Ain', 'Jean-Pierre', '4 résid Olympia', '2000', 'LAON', 5.59, 1, 'MH', ''),
+(42, 'Chemery', 'Jean-Pierre', '51 pl Ancienne Boucherie', '14000', 'CAEN', 396.58, 1, 'MV', 'HN'),
+(43, 'Comoz', 'Jean-Pierre', '35 r Auguste Lechesne', '18000', 'BOURGES', 340.35, 1, 'PS', 'CE'),
+(44, 'Desfaudais', 'Jean-Pierre', '7 pl St Gilles', '29000', 'BREST', 71.76, 1, 'PH', 'BG'),
+(45, 'Phan', 'JérÃ´me', '9 r Clos Caillet', '79000', 'NIORT', 451.61, 1, 'PO', ''),
+(46, 'Riou', 'Line', '43 bd Gén Vanier', '77000', 'MARNE LA VALLEE', 193.25, 1, 'MH', ''),
+(47, 'Chubilleau', 'Louis', '46 r Eglise', '17000', 'SAINTES', 202.07, 1, 'MV', ''),
+(48, 'Lebrun', 'Lucette', '178 r Auge', '54000', 'NANCY', 410.41, 1, 'PS', ''),
+(49, 'Goessens', 'Marc', '6 av 6 Juin', '39000', 'DOLE', 548.57, 1, 'PH', 'BO'),
+(50, 'Laforge', 'Marc', '5 résid Prairie', '50000', 'SAINT LO', 265.05, 1, 'PO', ''),
+(51, 'Millereau', 'Marc', '36 av 6 Juin', '72000', 'LA FERTE BERNARD', 430.42, 1, 'MH', ''),
+(52, 'Dauverne', 'Marie-Christine', '69 av Charlemagne', '21000', 'DIJON', 281.05, 1, 'MV', 'BO'),
+(53, 'Vittorio', 'Myriam', '3 pl Champlain', '94000', 'BOISSY SAINT LEGER', 356.23, 1, 'PS', 'IF'),
+(54, 'Lapasset', 'Nhieu', '31 av 6 Juin', '52000', 'CHAUMONT', 107, 1, 'PH', 'GE'),
+(55, 'Plantet-Besnier', 'Nicole', '10 av 1ère Armée Française', '86000', 'CHATELLEREAULT', 369.94, 1, 'PO', 'NA'),
+(56, 'Chubilleau', 'Pascal', '3 r Hastings', '15000', 'AURRILLAC', 290.75, 1, 'MH', 'AA'),
+(57, 'Robert', 'Pascal', '31 r St Jean', '93000', 'BOBIGNY', 162.41, 1, 'MV', 'IF'),
+(58, 'Jean', 'Pascale', '114 r Authie', '49100', 'SAUMUR', 375.52, 1, 'PS', ''),
+(59, 'Chanteloube', 'Patrice', '14 av Thiès', '13000', 'MARSEILLE', 478.01, 1, 'PH', ''),
+(60, 'Lecuirot', 'Patrice', 'résid St Pères 55 r Pigacière', '54000', 'NANCY', 239.66, 1, 'PO', ''),
+(61, 'Gandon', 'Patrick', '47 av Robert Schuman', '37000', 'TOURS', 599.06, 1, 'MH', ''),
+(62, 'Mirouf', 'Patrick', '22 r Puits Picard', '74000', 'ANNECY', 458.42, 1, 'MV', 'AA'),
+(63, 'Boireaux', 'Philippe', '14 av Thiès', '10000', 'CHALON EN CHAMPAGNE', 454.48, 1, 'PS', 'GE'),
+(64, 'Cendrier', 'Philippe', '7 pl St Gilles', '12000', 'RODEZ', 164.16, 1, 'PH', ''),
+(65, 'Duhamel', 'Philippe', '114 r Authie', '34000', 'MONTPELLIER', 98.62, 1, 'PO', ''),
+(66, 'Grigy', 'Philippe', '15 r Mélingue', '44000', 'CLISSON', 285.1, 1, 'MH', 'PL'),
+(67, 'Linard', 'Philippe', '1 r Albert de Mun', '81000', 'ALBI', 486.3, 1, 'MV', 'OC'),
+(68, 'Lozier', 'Philippe', '8 r Gaillon', '31000', 'TOULOUSE', 48.4, 1, 'PS', ''),
+(69, 'Dechâtre', 'Pierre', '63 av Thiès', '23000', 'MONTLUCON', 253.75, 1, 'PH', ''),
+(70, 'Goessens', 'Pierre', '22 r Jean Romain', '40000', 'MONT DE MARSAN', 426.19, 1, 'PO', ''),
+(71, 'Leménager', 'Pierre', '39 av 6 Juin', '57000', 'METZ', 118.7, 1, 'MH', ''),
+(72, 'Née', 'Pierre', '39 av 6 Juin', '82000', 'MONTAUBAN', 72.54, 1, 'MV', ''),
+(73, 'Guyot', 'Pierre-Laurent', '43 bd Gén Vanier', '48000', 'MENDE', 352.31, 1, 'PS', ''),
+(74, 'Chauchard', 'Roger', '9 r Vaucelles', '13000', 'MARSEILLE', 552.19, 1, 'PH', ''),
+(75, 'Mabire', 'Roland', '11 r Boutiques', '67000', 'STRASBOURG', 422.39, 1, 'PO', ''),
+(76, 'Leroy', 'Soazig', '45 r Boutiques', '61000', 'ALENCON', 570.67, 1, 'MH', 'BN'),
+(77, 'Guyot', 'Stéphane', '26 r Hérouville', '46000', 'FIGEAC', 28.85, 1, 'MV', 'OC'),
+(78, 'Delposen', 'Sylvain', '39 av 6 Juin', '27000', 'DREUX', 292.01, 1, 'PS', 'CE'),
+(79, 'Rault', 'Sylvie', '15 bd Richemond', '2000', 'SOISSON', 526.6, 1, 'PH', ''),
+(80, 'Renouf', 'Sylvie', '98 bd Mar Lyautey', '88000', 'EPINAL', 425.24, 1, 'PO', 'GE'),
+(81, 'Alliet-Grach', 'Thierry', '14 av Thiès', '7000', 'PRIVAS', 451.31, 1, 'MH', ''),
+(82, 'Bayard', 'Thierry', '92 r Falaise', '42000', 'SAINT ETIENNE', 271.71, 1, 'MV', ''),
+(83, 'Gauchet', 'Thierry', '7 r Desmoueux', '38100', 'GRENOBLE', 406.1, 1, 'PS', ''),
+(84, 'Bobichon', 'Tristan', '219 r Caponière', '9000', 'FOIX', 218.36, 1, 'PH', ''),
+(85, 'Duchemin-Laniel', 'Véronique', '130 r St Jean', '33000', 'LIBOURNE', 265.61, 1, 'PO', ''),
+(86, 'Laurent', 'Younès', '34 r Demolombe', '53000', 'MAYENNE', 496.1, 1, 'MH', '');
 
 -- --------------------------------------------------------
 
@@ -570,23 +591,31 @@ DROP TABLE IF EXISTS `rapport_visite`;
 CREATE TABLE IF NOT EXISTS `rapport_visite` (
   `COL_MATRICULE` varchar(10) NOT NULL,
   `RAP_NUM` int(11) NOT NULL,
-  `PRA_NUM` int(11) NOT NULL,
+  `PRA_NUM_PRATICIEN` int(11) NOT NULL,
+  `PRA_NUM_REMPLACANT` int(11) DEFAULT NULL,
   `RAP_DATE` datetime DEFAULT NULL,
   `RAP_BILAN` varchar(255) DEFAULT NULL,
-  `RAP_MOTIF` varchar(255) DEFAULT NULL,
+  `MOT_CODE` varchar(15) NOT NULL,
+  `RAP_MOTIF_AUTRE` varchar(255) DEFAULT NULL,
+  `RAP_DEFINITIF` tinyint(1) NOT NULL DEFAULT 0,
+  `MED_DEPOTLEGAL` varchar(10) DEFAULT NULL,
+  `MED_DEPOTLEGAL2` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`COL_MATRICULE`,`RAP_NUM`),
-  KEY `PRA_NUM` (`PRA_NUM`),
-  KEY `COL_MATRICULE` (`COL_MATRICULE`)
+  KEY `PRA_NUM` (`PRA_NUM_PRATICIEN`),
+  KEY `COL_MATRICULE` (`COL_MATRICULE`),
+  KEY `rapport_visite_motif_fk` (`MOT_CODE`),
+  KEY `rapport_visite_medicament_fk_` (`MED_DEPOTLEGAL`),
+  KEY `rapport_visite_medicament_fk_2` (`MED_DEPOTLEGAL2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `rapport_visite`
 --
 
-INSERT INTO `rapport_visite` (`COL_MATRICULE`, `RAP_NUM`, `PRA_NUM`, `RAP_DATE`, `RAP_BILAN`, `RAP_MOTIF`) VALUES
-('a131', 3, 23, '2002-04-18 00:00:00', 'Médecin curieux, à recontacer en décembre pour réunion', 'Actualisation annuelle'),
-('a131', 7, 41, '2003-03-23 00:00:00', 'RAS\r\nChangement de tel : 05 89 89 89 89', 'Rapport Annuel'),
-('a17', 4, 4, '2003-05-21 00:00:00', 'Changement de direction, redéfinition de la politique médicamenteuse, recours au générique', 'Baisse activité');
+INSERT INTO `rapport_visite` (`COL_MATRICULE`, `RAP_NUM`, `PRA_NUM_PRATICIEN`, `PRA_NUM_REMPLACANT`, `RAP_DATE`, `RAP_BILAN`, `MOT_CODE`, `RAP_MOTIF_AUTRE`, `RAP_DEFINITIF`, `MED_DEPOTLEGAL`, `MED_DEPOTLEGAL2`) VALUES
+('a131', 3, 23, 0, '2002-04-18 00:00:00', 'Médecin curieux, à recontacer en décembre pour réunion', 'Autre', 'Actualisation annuelle', 0, NULL, NULL),
+('a131', 7, 41, 0, '2003-03-23 00:00:00', 'RAS\r\nChangement de tel : 05 89 89 89 89', 'Autre', 'Rapport Annuel', 0, NULL, NULL),
+('a17', 4, 4, 0, '2003-05-21 00:00:00', 'Changement de direction, redéfinition de la politique médicamenteuse, recours au générique', 'Autre', 'Baisse activité', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -608,6 +637,7 @@ CREATE TABLE IF NOT EXISTS `region` (
 --
 
 INSERT INTO `region` (`REG_CODE`, `SEC_CODE`, `REG_NOM`) VALUES
+('AA', 'S', 'Auvergne Rhône-Alpes'),
 ('AL', 'E', 'Alsace Lorraine'),
 ('AQ', 'S', 'Aquitaine'),
 ('AU', 'P', 'Auvergne'),
@@ -617,12 +647,16 @@ INSERT INTO `region` (`REG_CODE`, `SEC_CODE`, `REG_NOM`) VALUES
 ('CA', 'N', 'Champagne Ardennes'),
 ('CE', 'P', 'Centre'),
 ('FC', 'E', 'Franche Comté'),
+('GE', 'E', 'Grand Est'),
+('HF', 'N', 'Hauts-de-France'),
 ('HN', 'N', 'Haute Normandie'),
 ('IF', 'P', 'Ile de France'),
 ('LG', 'S', 'Languedoc'),
 ('LI', 'P', 'Limousin'),
 ('MP', 'S', 'Midi Pyrénée'),
+('NA', 'S', 'Nouvelle-Aquitaine'),
 ('NP', 'N', 'Nord Pas de Calais'),
+('OC', 'S', 'Occitanie'),
 ('PA', 'S', 'Provence Alpes Cote d\'Azur'),
 ('PC', 'O', 'Poitou Charente'),
 ('PI', 'N', 'Picardie'),
@@ -956,7 +990,10 @@ ALTER TABLE `prescrire`
 --
 ALTER TABLE `rapport_visite`
   ADD CONSTRAINT `rap_col_fk` FOREIGN KEY (`COL_MATRICULE`) REFERENCES `collaborateur` (`COL_MATRICULE`),
-  ADD CONSTRAINT `rap_pra_fk` FOREIGN KEY (`PRA_NUM`) REFERENCES `praticien` (`PRA_NUM`);
+  ADD CONSTRAINT `rap_pra_fk` FOREIGN KEY (`PRA_NUM_PRATICIEN`) REFERENCES `praticien` (`PRA_NUM`),
+  ADD CONSTRAINT `rapport_visite_medicament_fk_` FOREIGN KEY (`MED_DEPOTLEGAL`) REFERENCES `medicament` (`MED_DEPOTLEGAL`),
+  ADD CONSTRAINT `rapport_visite_medicament_fk_2` FOREIGN KEY (`MED_DEPOTLEGAL2`) REFERENCES `medicament` (`MED_DEPOTLEGAL`),
+  ADD CONSTRAINT `rapport_visite_motif_fk` FOREIGN KEY (`MOT_CODE`) REFERENCES `motif` (`MOT_CODE`);
 
 --
 -- Contraintes pour la table `region`
