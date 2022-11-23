@@ -1,6 +1,6 @@
 <?php
     require_once ('modele/medicament.modele.inc.php');
-   
+    require_once ('modele/praticien.modele.inc.php');
     require_once ('modele/connexion.modele.inc.php');
 
     if(!isset($_REQUEST['uc']) || empty($_REQUEST['uc']))
@@ -15,7 +15,9 @@
     }else{
         include("vues/v_header.php");
     }
+
     var_dump($_SESSION); 
+    
     switch($uc)
     {
         case 'accueil':

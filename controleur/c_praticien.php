@@ -1,29 +1,28 @@
 <?php
 if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
-	$action = "medecin";
+	$action = "formulairepraticien";
 } else {
 	$action = $_REQUEST['action'];
 }
 switch ($action) {
 	case 'formulairepraticien': {
-
-			$result = getAllNomPraticien();
-			// include("vues/v_.php");
+			$result = getAllLibellePraticien();
+			include("vues/v_formulairePraticien.php");
 			break;
 		}
 
 	case 'afficherpraticien': {
 
-			if (isset($_REQUEST['medecin']) && getAllInformationMedicamentDepot($_REQUEST['medecin'])) {
-				$mede = $_REQUEST['medecin'];
-				$carac = getAllInformationMedicamentDepot($mede);
+			if (isset($_POST['praticien']) && getAllInformationPraticien($_POST['praticien'])) {
+				$pra = $_POST['praticien'];
+				$carac = getAllInformationPraticien($pra);
 				if (empty($carac[7])) {
 					$carac[7] = 'Non défini(e)';
 				}
-				include("vues/v_afficherMedecin.php");
+				include("vues/v_afficherPraticien.php");
 			} else {
 				$_SESSION['erreur'] = true;
-				header("Location: index.php?uc=medecin&action=formulairemedec");
+				header("Location: index.php?uc=praticien&action=formulairepraticien");
 			}
 			break;
 		}
