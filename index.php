@@ -32,7 +32,15 @@
             }
             break;
         }
-    
+        case 'praticien' :
+        {   
+            if(!empty($_SESSION['login'])){
+                include("controleur/c_praticien.php");
+            }else{
+                include("vues/v_accesInterdit.php");
+            }
+            break;
+        }
         case 'connexion' :
         {   
                         include("controleur/c_connexion.php");

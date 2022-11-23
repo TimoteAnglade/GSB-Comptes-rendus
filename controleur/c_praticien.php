@@ -5,14 +5,14 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 	$action = $_REQUEST['action'];
 }
 switch ($action) {
-	case 'formulairemedec': {
+	case 'formulairepraticien': {
 
 			$result = getAllNomPraticien();
-			include("vues/v_formulaireMedicament.php");
+			// include("vues/v_.php");
 			break;
 		}
 
-	case 'affichermedec': {
+	case 'afficherpraticien': {
 
 			if (isset($_REQUEST['medecin']) && getAllInformationMedicamentDepot($_REQUEST['medecin'])) {
 				$mede = $_REQUEST['medecin'];
@@ -27,7 +27,11 @@ switch ($action) {
 			}
 			break;
 		}
+	case 'gerermedecin': {
 
+			// include("vues/v_.php");
+			break;
+		}
 
 	default: {
 			header('location: index.php?uc=connexion&action=connexion');
