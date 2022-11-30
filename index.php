@@ -17,8 +17,6 @@
     }else{
         include("vues/v_header.php");
     }
-
-    var_dump($_SESSION); 
     
     switch($uc)
     {
@@ -62,6 +60,7 @@
             break;
         }
     }
+    var_dump($_SESSION); 
 ?>
 <?php include("vues/v_footer.php") ;?>
 </body>

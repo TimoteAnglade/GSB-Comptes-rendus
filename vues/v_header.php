@@ -30,14 +30,16 @@
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=medicaments&action=formulairemedoc">Médicaments</a>
                         </li>
-                        <?php if ($_SESSION['habilitation'] == 2){
-                            $action='gerermedecin';
-                        } else {
-                            $action='formulairepraticien';
-                        }?>
                         <li class="nav-item ">
-                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=praticien&action=<?php echo $action ; ?>">Praticien</a>
+                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=praticien&action=formulairepraticien">Praticien</a>
                         </li>
+                        <?php
+                            if ( $_SESSION['habilitation'] == 2 ){
+                                echo '<li class="nav-item ">
+                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=praticien&action=gererpraticien">Gestion Praticien</a>
+                        </li>';
+                            }
+                        ?>
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=connexion&action=profil">Profil</a>
                         </li>

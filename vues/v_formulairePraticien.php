@@ -1,7 +1,7 @@
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-5 pt-4">
-            <h1 class="titre text-center">Formulaire de praticien</h1>
+            <h1 class="titre text-center"><?php echo $word ;?></h1>
             <p class="text text-center">
                 Formulaire permettant d'afficher toutes les informations
                 à propos d'un praticien en particulier.
@@ -28,7 +28,7 @@
                     </select>
                     <input class="btn btn-info text-light valider" type="submit" value="Afficher les informations">
                 </form>
-            </div>
+            </div> 
         </div>
     </div>
 </section>

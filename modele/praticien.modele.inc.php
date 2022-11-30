@@ -2,12 +2,12 @@
 
 include_once 'bd.inc.php';
 
-function getAllInformationPraticien($numero)
+function getAllInfoPraticien($numero)
 {
 
     try {
         $monPdo = connexionPDO();
-        $req = $monPdo->prepare('SELECT p.`PRA_NUM` AS `numero`,p.`PRA_NOM` AS `nom`,p.`PRA_PRENOM` AS `prenom`,p.`PRA_ADRESSE` AS `adresse`,p.`PRA_CP` AS `cp`,p.`PRA_VILLE` AS `ville`,p.`PRA_COEFNOTORIETE` AS `notoriete`,tp.`TYP_LIBELLE` AS `type`,p.`REG_CODE` AS `region` FROM praticien p JOIN type_praticien tp ON tp.`TYP_CODE`=p.`TYP_CODE` WHERE PRA_NUM=:numero');
+        $req = $monPdo->prepare('SELECT p.`PRA_NUM` AS `numero`,p.`PRA_NOM` AS `nom`,p.`PRA_PRENOM` AS `prenom`,p.`PRA_ADRESSE` AS `adresse`,p.`PRA_CP` AS `cp`,p.`PRA_VILLE` AS `ville`,p.`PRA_COEFNOTORIETE` AS `notoriete`,tp.`TYP_LIBELLE` AS `type` FROM praticien p JOIN type_praticien tp ON tp.`TYP_CODE`=p.`TYP_CODE` WHERE PRA_NUM=:numero');
         $req->bindParam(':numero', $numero, PDO::PARAM_STR);
         $req->execute();
         $res = $req->fetch();
@@ -19,7 +19,7 @@ function getAllInformationPraticien($numero)
     }
 }
 
-function getAllLibellePraticien()
+function getInfoPraticien()
 {
 
     try {
@@ -36,15 +36,15 @@ function getAllLibellePraticien()
     }
 }
 
-function getAllLibellePraticienParRegion($region)
+function getInfoPraticienParRegion($region)
 {
 
     try {
 
         $monPdo = connexionPDO();
         $req = $monPdo->prepare('SELECT PRA_NUM,PRA_NOM,PRA_PRENOM FROM praticien WHERE REG_CODE=:region ORDER BY PRA_NUM');
-        $res = execute(array(':region' => $region ));
-        $result = $res->fetchAll(PDO::FETCH_ASSOC);
+        $res = $req->execute(array('region' => $region ));
+        $result = $req->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     } catch (PDOException $e) {

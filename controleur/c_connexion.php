@@ -29,6 +29,7 @@ switch ($action) {
 			} else {
 				$info = getAllInformationCompte($_SESSION['matricule']);
 				$_SESSION['region'] = $info[9];
+				$_SESSION['codeR'] = $info[10];
 				for ($i = 7; $i <= 8; $i++) {
 					if (empty($info[$i])) {
 						$info[$i] = 'Non défini(e)';

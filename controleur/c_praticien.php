@@ -6,16 +6,18 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 }
 switch ($action) {
 	case 'formulairepraticien': {
-			$result = getAllLibellePraticien();
+			$result = getInfoPraticien();
+			$word = "Formulaire de praticien";
 			include("vues/v_formulairePraticien.php");
 			break;
 		}
 
 	case 'afficherpraticien': {
 
-			if (isset($_POST['praticien']) && getAllInformationPraticien($_POST['praticien'])) {
+			if (isset($_POST['praticien']) && getAllInfoPraticien($_POST['praticien'])) {
 				$pra = $_POST['praticien'];
-				$carac = getAllInformationPraticien($pra);
+				$carac = getAllInfoPraticien($pra);
+				$region = substr($carac[4],0,2); // TODO: FAIRE LA FONCTION POUR TROUVER VIA 
 				if (empty($carac[7])) {
 					$carac[7] = 'Non défini(e)';
 				}
@@ -26,9 +28,11 @@ switch ($action) {
 			}
 			break;
 		}
-	case 'gerermedecin': {
-
-			// include("vues/v_.php");
+	case 'gererpraticien': {
+			$region = $_SESSION['codeR']; //TODO 
+			$result = getInfoPraticienParRegion($region);
+			$word = "Gestion des praticien";
+			include("vues/v_formulairePraticien.php");
 			break;
 		}
 
