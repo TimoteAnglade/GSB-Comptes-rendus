@@ -29,7 +29,7 @@ switch ($action) {
 	case 'gererpraticien': {
 			$region = $_SESSION['codeR']; //TODO 
 			$result = getInfoPraticienParRegion($region);
-			$result = getInfoPraticien();
+			//$result = getInfoPraticien();
 			$word = "Gestion des praticien";
 			$quote = "d'afficher et de gérer";
 			include("vues/v_formulairePraticien.php");

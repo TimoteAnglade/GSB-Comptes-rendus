@@ -48,7 +48,7 @@
                         include("controleur/c_connexion.php");
             break; 
         }
-        case 'rapport' :
+        case 'rapportdevisite' :
         {
             include("controleur/c_rapport.php");
             break;

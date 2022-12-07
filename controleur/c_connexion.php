@@ -32,7 +32,8 @@ switch ($action) {
 				$_SESSION['codeR'] = $info[10];
 				for ($i = 7; $i <= 8; $i++) {
 					if (empty($info[$i])) {
-						$info[$i] = 'Non défini(e)';
+						$info[$i] = getSecteurCollaborateur($_SESSION['matricule']);
+						//$info[$i] = 'Non défini(e)';
 					}
 				}
 				include("vues/v_profil.php");
