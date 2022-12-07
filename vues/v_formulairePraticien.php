@@ -33,7 +33,7 @@
                         }
                         ?>
                     </select>
-                    <input class="btn btn-info text-light valider" type="submit" value="Afficher les informations">
+                    <input class="btn btn-info text-light valider" type="submit" value="<?php echo $button ;?> les informations">
                 </form>
             </div> 
         </div>
