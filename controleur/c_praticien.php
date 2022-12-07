@@ -9,6 +9,7 @@ switch ($action) {
 			$result = getInfoPraticien();
 			$word = "Formulaire de praticien";
 			$quote = "d'afficher";
+			$button = "Afficher";
 			include("vues/v_formulairePraticien.php");
 			break;
 		}
@@ -18,7 +19,8 @@ switch ($action) {
 			if (isset($_POST['praticien']) && getAllInfoPraticien($_POST['praticien'])) {
 				$pra = $_POST['praticien'];
 				$carac = getAllInfoPraticien($pra);
-				$region = substr($carac[4],0,2); // TODO: FAIRE LA FONCTION POUR TROUVER VIA 
+				$region = getNomRegion(substr($carac[4],0,2)); 
+				$region = $region['REG_NOM'];
 				include("vues/v_afficherPraticien.php");
 			} else {
 				$_SESSION['erreur'] = true;
@@ -27,11 +29,11 @@ switch ($action) {
 			break;
 		}
 	case 'gererpraticien': {
-			$region = $_SESSION['codeR']; //TODO 
+			$region = $_SESSION['codeR'];
 			$result = getInfoPraticienParRegion($region);
-			//$result = getInfoPraticien();
 			$word = "Gestion des praticien";
 			$quote = "d'afficher et de gérer";
+			$button = "Modifier";
 			include("vues/v_formulairePraticien.php");
 			break;
 		}
@@ -39,7 +41,8 @@ switch ($action) {
 		if (isset($_POST['praticien']) && getAllInfoPraticien($_POST['praticien'])) {
 			$pra = $_POST['praticien'];
 			$carac = getAllInfoPraticien($pra);
-			$region = substr($carac[4],0,2); // TODO: FAIRE LA FONCTION POUR TROUVER VIA 
+			$region = getNomRegion(substr($carac[4],0,2));
+			$region = $region['REG_NOM'];
 			include("vues/v_modificationPraticien.php");
 		} else {
 			$_SESSION['erreur'] = true;

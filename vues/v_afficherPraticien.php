@@ -15,7 +15,7 @@
                     <p><span class="carac">Adresse</span> : <?php echo $carac[3]; ?></p>
                     <p><span class="carac">Code postal</span> : <?php echo $carac[4]; ?></p>
                     <p><span class="carac">Ville</span> : <?php echo $carac[5]; ?></p>
-                    <p><span class="carac">Région</span> : <?php echo $region ?></p>
+                    <p><span class="carac">Région</span> : <?php echo $region; ?></p>
                     <p><span class="carac">Notoriété</span> : <?php echo $carac[6] . '%' ; ?></p>
                     <p><span class="carac">Type</span> : <?php echo $carac[7]; ?></p>
                     <input class="btn btn-info text-light valider col-6 col-sm-5 col-md-4 col-lg-3" type="button" onclick="history.go(-1)" value="Retour">
