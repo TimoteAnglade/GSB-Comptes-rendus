@@ -210,29 +210,3 @@ function flitrerParPraticien($liste, $matricule, $praticien){
     }
     return $result;
 }
-
-function getInfoPraticienParCollaborateur($matricule)
-{
-
-    try {
-
-        $monPdo = connexionPDO();
-        $req = 'SELECT p.PRA_NUM,p.PRA_NOM,p.PRA_PRENOM 
-        FROM rapport_visite r
-        INNER JOIN praticien p
-        ON p.PRA_NUM=r.PRA_NUM_PRATICIEN
-        WHERE r.COL_MATRICULE="'.$matricule.'"
-        union
-        SELECT p2.PRA_NUM, p2.PRA_NOM, p2.PRA_PRENOM
-        FROM rapport_visite r1
-        INNER JOIN praticien p2
-        ON p2.PRA_NUM=r1.PRA_NUM_REMPLACANT
-        WHERE r1.COL_MATRICULE="'.$matricule.'";';
-        $res = $monPdo->query($req);
-        $result = $res->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
-    } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
-    }
-}
