@@ -8,13 +8,15 @@ switch ($action) {
 	case 'voirMesRapports': {
 		$matricule = $_SESSION['matricule'];
 		$result = getRapportsCollaborateur();
+		var_dump($result);
 		$titre = array('Formulaire de vos rapports', 'Formulaire permettant d\'accéder aux rapports que vous avez rédigé et vos brouillons', 'Vos rapports :');
 		include("vues/v_listeRapports.php");
 		break;
 		}
 
 	case 'choisirDateMesRapports': {
-		$result = getInfoPraticien();
+		$matricule = $_SESSION['matricule'];
+		$result = getInfoPraticienParCollaborateur($matricule);
 		include("vues/v_fourchetteDates.php");
 		break;
 	}
@@ -44,6 +46,7 @@ switch ($action) {
 			if(date_diff($dateDeb,$dateFin)->invert==0){
 				$matricule = $_SESSION['matricule'];
 				$result = getRapportsCollaborateur();
+				$result = filtrerParPeriode($result, $matricule, $dateDeb, $dateFin);
 				$titre = array('Formulaire de vos rapports', 'Formulaire permettant d\'accéder aux rapports que vous avez rédigé et vos brouillons', 'Vos rapports :');
 				include("vues/v_listeRapports.php");
 			}

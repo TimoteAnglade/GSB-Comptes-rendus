@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 14 déc. 2022 à 07:51
+-- Généré le : mer. 14 déc. 2022 à 08:49
 -- Version du serveur : 10.6.5-MariaDB
 -- Version de PHP : 8.0.13
 
@@ -716,7 +716,8 @@ CREATE TABLE IF NOT EXISTS `rapport_visite` (
   KEY `COL_MATRICULE` (`COL_MATRICULE`),
   KEY `rapport_visite_motif_fk` (`MOT_CODE`),
   KEY `rapport_visite_medicament_fk_` (`MED_DEPOTLEGAL`),
-  KEY `rapport_visite_medicament_fk_2` (`MED_DEPOTLEGAL2`)
+  KEY `rapport_visite_medicament_fk_2` (`MED_DEPOTLEGAL2`),
+  KEY `rap_pra_remp_fk` (`PRA_NUM_REMPLACANT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
@@ -724,9 +725,9 @@ CREATE TABLE IF NOT EXISTS `rapport_visite` (
 --
 
 INSERT INTO `rapport_visite` (`COL_MATRICULE`, `RAP_NUM`, `PRA_NUM_PRATICIEN`, `PRA_NUM_REMPLACANT`, `RAP_DATE`, `RAP_BILAN`, `MOT_CODE`, `RAP_MOTIF_AUTRE`, `RAP_DEFINITIF`, `MED_DEPOTLEGAL`, `MED_DEPOTLEGAL2`) VALUES
-('a131', 3, 23, 0, '2002-04-18 00:00:00', 'Médecin curieux, à recontacer en décembre pour réunion', 'Autre', 'Actualisation annuelle', 0, NULL, NULL),
-('a131', 7, 41, 0, '2003-03-23 00:00:00', 'RAS\nChangement de tel : 05 89 89 89 89', 'Autre', 'Rapport Annuel', 0, NULL, NULL),
-('a17', 4, 4, 0, '2003-05-21 00:00:00', 'Changement de direction, redéfinition de la politique médicamenteuse, recours au générique', 'Autre', 'Baisse activité', 0, NULL, NULL);
+('a131', 3, 23, NULL, '2002-04-18 00:00:00', 'Médecin curieux, à recontacer en décembre pour réunion', 'Autre', 'Actualisation annuelle', 0, NULL, NULL),
+('a131', 7, 41, NULL, '2003-03-23 00:00:00', 'RAS\nChangement de tel : 05 89 89 89 89', 'Autre', 'Rapport Annuel', 0, NULL, NULL),
+('a17', 4, 4, NULL, '2003-05-21 00:00:00', 'Changement de direction, redéfinition de la politique médicamenteuse, recours au générique', 'Autre', 'Baisse activité', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1093,6 +1094,7 @@ ALTER TABLE `prescrire`
 ALTER TABLE `rapport_visite`
   ADD CONSTRAINT `rap_col_fk` FOREIGN KEY (`COL_MATRICULE`) REFERENCES `collaborateur` (`COL_MATRICULE`),
   ADD CONSTRAINT `rap_pra_fk` FOREIGN KEY (`PRA_NUM_PRATICIEN`) REFERENCES `praticien` (`PRA_NUM`),
+  ADD CONSTRAINT `rap_pra_remp_fk` FOREIGN KEY (`PRA_NUM_REMPLACANT`) REFERENCES `praticien` (`PRA_NUM`),
   ADD CONSTRAINT `rapport_visite_medicament_fk_` FOREIGN KEY (`MED_DEPOTLEGAL`) REFERENCES `medicament` (`MED_DEPOTLEGAL`),
   ADD CONSTRAINT `rapport_visite_medicament_fk_2` FOREIGN KEY (`MED_DEPOTLEGAL2`) REFERENCES `medicament` (`MED_DEPOTLEGAL`),
   ADD CONSTRAINT `rapport_visite_motif_fk` FOREIGN KEY (`MOT_CODE`) REFERENCES `motif` (`MOT_CODE`);

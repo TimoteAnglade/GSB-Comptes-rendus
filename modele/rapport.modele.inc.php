@@ -120,6 +120,21 @@ function getDateRapport($id, $matricule) {
     }   
 }
 
+function getPraticienRapport($id, $matricule) {
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT pra_num_praticien
+                FROM rapport_visite
+                WHERE rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
+        $res = $monPdo->query($req);
+        $result = $res->fetch();
+        return $result[0];
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }   
+}
+
 function estBrouillon($id, $matricule)
 {
     try {
@@ -165,6 +180,56 @@ function getPresentesRapport($id, $matricule)
                 WHERE r.rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
         $res = $monPdo->query($req);
         $result = $res->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function filtrerParPeriode($liste, $matricule, $date1, $date2) {
+    $result = array();
+    foreach($liste as $rapport){
+        $dateRap=date_create(getDateRapport($rapport['rap_num'], $matricule));
+        if(($dateRap>=$date1)&&($dateRap<=$date2))   
+        {
+            $result[]=$rapport;
+        }
+    }
+    return $result;
+}
+
+function flitrerParPraticien($liste, $matricule, $praticien){
+    $result = array();
+    foreach($liste as $rapport){
+        $praticienRap=date_create(getPraticienRapport($rapport['rap_num'], $matricule));
+        if($praticien==$praticien)
+        {
+            $result[]=$rapport;
+        }
+    }
+    return $result;
+}
+
+function getInfoPraticienParCollaborateur($matricule)
+{
+
+    try {
+
+        $monPdo = connexionPDO();
+        $req = 'SELECT p.PRA_NUM,p.PRA_NOM,p.PRA_PRENOM 
+        FROM rapport_visite r
+        INNER JOIN praticien p
+        ON p.PRA_NUM=r.PRA_NUM_PRATICIEN
+        WHERE r.COL_MATRICULE="'.$matricule.'"
+        union
+        SELECT p2.PRA_NUM, p2.PRA_NOM, p2.PRA_PRENOM
+        FROM rapport_visite r1
+        INNER JOIN praticien p2
+        ON p2.PRA_NUM=r1.PRA_NUM_REMPLACANT
+        WHERE r1.COL_MATRICULE="'.$matricule.'";';
+        $res = $monPdo->query($req);
+        $result = $res->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
