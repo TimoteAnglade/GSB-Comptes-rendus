@@ -18,9 +18,10 @@
                     $_SESSION['erreur'] = false;
                 } 
                 
-                if ($action == 'gererpraticien')
+                if ($action == 'gererpraticien'){
                     $link='index.php?uc=praticien&action=modifierpraticien';
-                else
+                    echo '<a href="index.php?uc=praticien&action=ajoutpraticien"><button type="button">Ajouter Praticien</button></a>';
+                } else
                     $link='index.php?uc=praticien&action=afficherpraticien';
                 ?>
                 <form action="<?php echo $link ;?>" method="post" class="formulaire-recherche col-12 m-0">

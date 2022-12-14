@@ -52,9 +52,7 @@ function getInfoPraticien()
 
 function getInfoPraticienParRegion($region)
 {
-
     try {
-
         $monPdo = connexionPDO();
         // $req = $monPdo->prepare('SELECT PRA_NUM,PRA_NOM,PRA_PRENOM FROM praticien WHERE REG_CODE=:region ORDER BY PRA_NUM');
         $req = $monPdo->prepare('SELECT PRA_NUM,PRA_NOM,PRA_PRENOM 
@@ -125,7 +123,7 @@ function getNomRegion($num){
     try {
 
         $monPdo = connexionPDO();
-        $req = $req = $monPdo->prepare('SELECT r.REG_NOM 
+        $req = $monPdo->prepare('SELECT r.REG_NOM 
             FROM departement d 
             INNER JOIN region r ON r.REG_CODE=d.REG_CODE 
             WHERE d.DEP_NUM=:num');
@@ -136,5 +134,38 @@ function getNomRegion($num){
         print "Erreur !: " . $e->getMessage();
         die();
     }
+}
+
+function enregistrementPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$type,$region){
+    $tmp = false;
+    try {
+        $monPdo = connexionPDO();
+        $req = $req = $monPdo->prepare('SELECT PRA_NUM FROM praticien WHERE PRA_NUM=:num');
+        $res = $req -> execute(array('num'=>$num));
+        $result = $req->fetch(PDO::FETCH_ASSOC);
+        if (!empty($result['PRA_NUM'])){
+            $req = $req = $monPdo->prepare('UPDATE praticien
+            PRA_NOM= :nom,
+            PRA_PRENOM= :prenom,
+            PRA_ADRESSE= :adresse,
+            PRA_CP= :ville,
+            PRA_VILLE= :ville,
+            PRA_COEFNOTORIETE= :notor,
+            TYP_CODE=:type
+            WHERE PRA_NUM=:num');
+            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'type'=>$type,'region'=>$region));
+            $tmp = true;
+        } else {
+            $req = $req = $monPdo->prepare('INSERT INTO praticien
+            (PRA_NUM,PRA_NOM,PRA_PRENOM,PRA_ADRESSE,PRA_CP,PRA_VILLE,PRA_COEFNOTORIETE,TYP_CODE) 
+            VALUES (:num,:nom,:prenom,:adresse,:ville,:ville,:notor,:type)');
+            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'type'=>$type,'region'=>$region));
+            $tmp = true;
+        }
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+    return $tmp;
 }
 ?>
