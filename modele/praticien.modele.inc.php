@@ -194,4 +194,19 @@ function enregistrementPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$t
     }
     return $tmp;
 }
+
+function getNomPraticien($num){
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT pra_nom
+                FROM praticien
+                WHERE pra_num='.$num.';';
+        $res = $monPdo->query($req);
+        $result = $res->fetch();
+        return $result[0];
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }  
+}
 ?>
