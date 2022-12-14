@@ -89,12 +89,13 @@ function getListePraticiensVisitePar($matricule){
     }
 }
 
-function getRapportsCollaborateur() {
+function getRapportsCollaborateur($matricule) {
     try {
         $monPdo = connexionPDO();
         $req = 'SELECT rap_num
         		FROM rapport_visite
-        		WHERE col_matricule="'.$_SESSION['matricule'].'";';
+        		WHERE col_matricule="'.$matricule.'"
+                ORDER BY rap_date;';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
 
@@ -173,10 +174,42 @@ function getPresentesRapport($id, $matricule)
 {
     try {
         $monPdo = connexionPDO();
+        $req = 'SELECT MED_DEPOTLEGAL, MED_DEPOTLEGAL2
+                FROM rapport_visite r
+                WHERE r.rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
+        $res = $monPdo->query($req);
+        $result = $res->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getPresentesNomRapport($id, $matricule)
+{
+    try {
+        $monPdo = connexionPDO();
         $req = 'SELECT m1.med_nomcommercial as med_nomcommercial1, m2.med_nomcommercial as med_nomcommercial2
                 FROM rapport_visite r
                 INNER JOIN medicament m1 ON m1.MED_DEPOTLEGAL=r.MED_DEPOTLEGAL
                 LEFT JOIN medicament m2 ON m2.MED_DEPOTLEGAL=r.MED_DEPOTLEGAL2
+                WHERE r.rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
+        $res = $monPdo->query($req);
+        $result = $res->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getMotifRapport($id, $matricule)
+{
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT MOT_CODE, rap_motif_autre
+                FROM rapport_visite r
                 WHERE r.rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
         $res = $monPdo->query($req);
         $result = $res->fetch(PDO::FETCH_ASSOC);
@@ -202,8 +235,8 @@ function filtrerParPeriode($liste, $matricule, $date1, $date2) {
 function flitrerParPraticien($liste, $matricule, $praticien){
     $result = array();
     foreach($liste as $rapport){
-        $praticienRap=date_create(getPraticienRapport($rapport['rap_num'], $matricule));
-        if($praticien==$praticien)
+        $praticienRap=getPraticienRapport($rapport['rap_num'], $matricule);
+        if($praticien==$praticienRap)
         {
             $result[]=$rapport;
         }

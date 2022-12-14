@@ -22,8 +22,12 @@
                     <select required name="rapport" class="form-select mt-3">
                         <option value class="text-center">- Choisissez un rapport -</option>
                         <?php
-                        foreach ($result as $key) {
-echo '<option value="' . $key['rap_num'] . '" class="form-control"> Rapport n°' . $key['rap_num'] . ' : ' . getDateRapport($key['rap_num'], $matricule). '</option>';
+                        foreach ($data as $key) {
+                            if(($titre[3]==1 && $key[6]==1) || $key[6]==0){
+                                echo '<option value="' . $key[0] . '" class="form-control"';    
+                                if($key[6]){echo 'style="font-style: italic; color: purple"';}
+                                echo '> Rapport n°' . $key[0] . ' : ' . $key[1] . ' | ' . $key[2] . ' | ' . $key[3] . ' | ' . $key[4] . $key[5] . '</option>';
+                            }
                         }
                         ?>
                     </select>
