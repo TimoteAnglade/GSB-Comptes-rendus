@@ -19,8 +19,8 @@ switch ($action) {
 		if (isset($_REQUEST['praticien']) && getAllInfoPraticien($_REQUEST['praticien'])) {
 			$pra = $_REQUEST['praticien'];
 			$carac = getAllInfoPraticien($pra);
-			$regcode = substr($carac[4],0,2);
-			$regfonc = getNomRegion($regcode); 
+			$code = substr($carac[4],0,2);
+			$regfonc = getRegionParDep($code);
 			$region = $regfonc['REG_NOM'];
 			include("vues/v_afficherPraticien.php");
 		} else {
@@ -31,14 +31,16 @@ switch ($action) {
 	}
 	case 'ajoutpraticien': {
 			$region = $_SESSION['region'];
-			$regcode = '';
+			$depcode = getDepartement($_SESSION['codeR']);
 			$num='';$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='';$type='';
+			$lesTypes = getLesTypes();
 			include("vues/v_modificationPraticien.php");
 			break;
 		}
 	case 'gererpraticien': {
-			$regcode = $_SESSION['codeR'];
-			$result = getInfoPraticienParRegion($regcode);
+			$depcode = getDepartement($_SESSION['codeR']);
+			$code = $_SESSION['codeR'];
+			$result = getInfoPraticienParRegion($code);
 			$word = "Gestion des praticien";
 			$quote = "d'afficher et de gérer";
 			$button = "Modifier";
@@ -49,10 +51,11 @@ switch ($action) {
 		if (isset($_POST['praticien']) && getAllInfoPraticien($_POST['praticien'])) {
 			$pra = $_POST['praticien'];
 			$carac = getAllInfoPraticien($pra);
-			$regcode = substr($carac[4],0,2);
-			$regfonc = getNomRegion($regcode);
-			$region = $regfonc['REG_NOM'];
+			$code = substr($carac[4],0,2);
+			$depcode = getDepartement($_SESSION['codeR']);
+			$region = $_SESSION['region'];
 			$num=$carac[0];$nom=$carac[1];$prenom=$carac[2];$adresse=$carac[3];$cp=substr($carac[4],2,5);$ville=$carac[5];$notor=$carac[6];$type=$carac[7];
+			$lesTypes = getLesTypes();
 			include("vues/v_modificationPraticien.php");
 		} else {
 			$_SESSION['erreur'] = true;
@@ -61,11 +64,12 @@ switch ($action) {
 		break;
 	}
 	case 'enregistrermodif':{
-		$num=$_POST['num'];$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$cp=$_POST['regcode']."".$_POST['cp'];$ville=$_POST['ville'];$region=$_POST['region'];$notor=$_POST['notor'];$type=$_POST['type'];
+		$num=$_POST['num'];$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$region=$_POST['region'];$notor=$_POST['notor'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
 		if ( enregistrementPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$type,$region) ){
 			header("Location: index.php?uc=praticien&action=gererpraticien");
 		} else {
 			$_SESSION['erreur'] = true;
+			$lesTypes = getLesTypes();
 			include("vues/v_modificationPraticien.php");
 		}
 		break;

@@ -55,12 +55,12 @@ function getInfoPraticienParRegion($region)
     try {
         $monPdo = connexionPDO();
         // $req = $monPdo->prepare('SELECT PRA_NUM,PRA_NOM,PRA_PRENOM FROM praticien WHERE REG_CODE=:region ORDER BY PRA_NUM');
-        $req = $monPdo->prepare('SELECT PRA_NUM,PRA_NOM,PRA_PRENOM 
-            FROM praticien 
-            INNER JOIN departement d ON SUBSTRING(PRA_CP,1,2)=d.DEP_NUM 
+        $req = $monPdo->prepare('SELECT p.PRA_NUM,p.PRA_NOM,p.PRA_PRENOM 
+            FROM praticien p
+            INNER JOIN departement d ON SUBSTRING(p.PRA_CP,1,2)=d.DEP_NUM 
             WHERE REG_CODE=:region 
             ORDER BY PRA_NUM');
-        $res = $req->execute(array('region' => $region ));
+        $res = $req->execute(array('region' => $region));
         $result = $req->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
@@ -98,15 +98,13 @@ function getInfoPraticienParCollaborateur($matricule)
 
 function getAllRegionPraticien()
 {
-
     try {
-
         $monPdo = connexionPDO();
         $req = 'SELECT DISTINCT p.REG_CODE,r.REG_NOM 
         FROM praticien p 
         JOIN region r ON r.REG_CODE = p.REG_CODE';
         $res = $monPdo->query($req);
-        $result = $res->fetchAll();
+        $result = $res->fetch();
 
         return $result;
     } catch (PDOException $e) {
@@ -118,7 +116,6 @@ function getAllRegionPraticien()
 function getLesRegions()
 {
     try {
-
         $monPdo = connexionPDO();
         $req = 'SELECT REG_CODE,REG_NOM FROM region';
         $res = $monPdo->query($req);
@@ -145,16 +142,31 @@ function getLesTypes()
     }
 }
 
-function getNomRegion($num){
+function getRegionParDep($depcode){
     try {
 
         $monPdo = connexionPDO();
         $req = $monPdo->prepare('SELECT r.REG_NOM 
             FROM departement d 
             INNER JOIN region r ON r.REG_CODE=d.REG_CODE 
-            WHERE d.DEP_NUM=:num');
-        $res = $req->execute(array('num' => $num ));
+            WHERE d.DEP_NUM=:code');
+        $res = $req->execute(array('code' => $depcode ));
         $result = $req->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getDepartement($regcode){
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare('SELECT DEP_NUM 
+            FROM departement 
+            WHERE REG_CODE=:code');
+        $res = $req->execute(array('code' => $regcode ));
+        $result = $req->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();

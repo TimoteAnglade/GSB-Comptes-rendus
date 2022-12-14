@@ -4,7 +4,7 @@
             <h1 class="titre text-center"><?php echo $word ;?></h1>
             <p class="text text-center">
                 Formulaire permettant <?php echo $quote ;?> toutes les informations
-                à propos d'un praticien en particulier.
+                à propos d'un praticien en particulier dans votre région.
             </p>
         </div>
         <div class="row align-items-center justify-content-center">
@@ -17,13 +17,14 @@
                     echo '<p class="alert alert-danger text-center w-100">Un problème est survenu lors de la selection du praticien</p>';
                     $_SESSION['erreur'] = false;
                 } 
-                
+                 
                 if ($action == 'gererpraticien'){
                     $link='index.php?uc=praticien&action=modifierpraticien';
-                    echo '<a href="index.php?uc=praticien&action=ajoutpraticien"><button type="button">Ajouter Praticien</button></a>';
+                    echo '<a href="index.php?uc=praticien&action=ajoutpraticien" class="btn btn-info text-light valider">Ajouter Praticien</a>';
                 } else
                     $link='index.php?uc=praticien&action=afficherpraticien';
                 ?>
+                </br>
                 <form action="<?php echo $link ;?>" method="post" class="formulaire-recherche col-12 m-0">
                     <label class="titre-formulaire" for="listepra">Praticien disponible :</label>
                     <select required name="praticien" class="form-select mt-3">
