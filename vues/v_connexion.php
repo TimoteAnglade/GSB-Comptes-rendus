@@ -13,7 +13,6 @@ if (isset($_POST['connexion'])) {
             $_SESSION['login'] = $arr['id_log'];
             $_SESSION['matricule'] = $arr['matricule'];
             $_SESSION['erreur'] = false;
-            $_SESSION['rajout'] = false;
             header('Location: index.php?uc=connexion&action=profil');
         }
     }

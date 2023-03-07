@@ -4,18 +4,9 @@
             <h1 class="titre text-center"><?php echo $word ;?></h1>
             <p class="text text-center">
                 Formulaire permettant <?php echo $quote ;?> toutes les informations
-                à propos d'un praticien en particulier.
+                à propos d'un praticien en particulier dans votre région.
             </p>
         </div>
-        <?php
-            if ($_SESSION['rajout']) { 
-                echo '<div class="alert alert-success alert-dismissible fade show mx-auto col-5">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button> 
-                    '.$_SESSION['rajout'].'                   
-                </div>';
-                $_SESSION['rajout'] = false;
-            }
-        ?>
         <div class="row align-items-center justify-content-center">
             <div class="test col-12 col-sm-8 col-lg-6 col-xl-5 col-xxl-4 py-lg-5">
                 <img class="img-fluid size-img-page" src="assets/img/medecin.jpg">
@@ -26,7 +17,7 @@
                     echo '<p class="alert alert-danger text-center w-100">Un problème est survenu lors de la selection du praticien</p>';
                     $_SESSION['erreur'] = false;
                 } 
-
+                 
                 if ($action == 'gererpraticien'){
                     $link='index.php?uc=praticien&action=modifierpraticien';
                     echo '<a href="index.php?uc=praticien&action=ajoutpraticien" class="btn btn-info text-light valider">Ajouter Praticien</a>';

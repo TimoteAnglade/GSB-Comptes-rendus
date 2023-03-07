@@ -15,7 +15,6 @@ function getAllInfoPraticien($numero)
             p.`PRA_CP` AS `cp`,
             p.`PRA_VILLE` AS `ville`,
             p.`PRA_COEFNOTORIETE` AS `notoriete`,
-            p.`PRA_COEFCONFIANCE` AS `confiance`,
             tp.`TYP_LIBELLE` AS `type` 
             FROM praticien p 
             JOIN type_praticien tp 
@@ -175,31 +174,31 @@ function getDepartement($regcode){
     }
 }
 
-function enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type){
+function enregistrementPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$type,$region){
     $tmp = false;
     try {
         $monPdo = connexionPDO();
-        $req = $req = $monPdo->prepare('SELECT PRA_NUM FROM praticien WHERE PRA_NUM= :num');
+        $req = $req = $monPdo->prepare('SELECT PRA_NUM FROM praticien WHERE PRA_NUM=:num');
         $res = $req -> execute(array('num'=>$num));
         $result = $req->fetch(PDO::FETCH_ASSOC);
         if (!empty($result['PRA_NUM'])){
             $req = $req = $monPdo->prepare('UPDATE praticien
-            SET PRA_NOM= :nom,
+            PRA_NOM= :nom,
             PRA_PRENOM= :prenom,
             PRA_ADRESSE= :adresse,
-            PRA_CP= :cp,
+            PRA_CP= :ville,
             PRA_VILLE= :ville,
             PRA_COEFNOTORIETE= :notor,
-            PRA_COEFCONFIANCE= :conf,
-            TYP_CODE= :type
-            WHERE PRA_NUM= :num');
-            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'conf'=>$conf,'type'=>$type));
-            $tmp = 1;
+            TYP_CODE=:type
+            WHERE PRA_NUM=:num');
+            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'type'=>$type,'region'=>$region));
+            $tmp = true;
         } else {
-            $req = $req = $monPdo->prepare('INSERT INTO praticien(PRA_NUM,PRA_NOM,PRA_PRENOM,PRA_ADRESSE,PRA_CP,PRA_VILLE,PRA_COEFNOTORIETE,PRA_COEFCONFIANCE,TYP_CODE) 
-            VALUES (:num,:nom,:prenom,:adresse,:cp,:ville,:notor,:conf,:type)');
-            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'conf'=>$conf,'type'=>$type));
-            $tmp = 2;
+            $req = $req = $monPdo->prepare('INSERT INTO praticien
+            (PRA_NUM,PRA_NOM,PRA_PRENOM,PRA_ADRESSE,PRA_CP,PRA_VILLE,PRA_COEFNOTORIETE,TYP_CODE) 
+            VALUES (:num,:nom,:prenom,:adresse,:ville,:ville,:notor,:type)');
+            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'type'=>$type,'region'=>$region));
+            $tmp = true;
         }
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
@@ -221,20 +220,5 @@ function getNomPraticien($num){
         print "Erreur !: " . $e->getMessage();
         die();
     }  
-}
-
-function getNumInutilisee(){
-    try {
-        $monPdo = connexionPDO();
-        $req = 'SELECT MAX(PRA_NUM) as "num" FROM praticien';
-        $res = $monPdo->query($req);
-        $result = $res->fetch(PDO::FETCH_ASSOC);
-        $result=$result["num"];
-        $result++;
-        return $result;
-    } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
-    }
 }
 ?>
