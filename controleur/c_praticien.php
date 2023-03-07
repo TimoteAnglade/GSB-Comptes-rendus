@@ -32,7 +32,9 @@ switch ($action) {
 	case 'ajoutpraticien': {
 			$region = $_SESSION['region'];
 			$depcode = getDepartement($_SESSION['codeR']);
-			$num='';$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='';$type='';
+			// var_dump(getNumInutilisee());
+			$num=getNumInutilisee();
+			$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='0';$conf='0';$type='';
 			$lesTypes = getLesTypes();
 			include("vues/v_modificationPraticien.php");
 			break;
@@ -54,7 +56,7 @@ switch ($action) {
 			$code = substr($carac[4],0,2);
 			$depcode = getDepartement($_SESSION['codeR']);
 			$region = $_SESSION['region'];
-			$num=$carac[0];$nom=$carac[1];$prenom=$carac[2];$adresse=$carac[3];$cp=substr($carac[4],2,5);$ville=$carac[5];$notor=$carac[6];$type=$carac[7];
+			$num=$carac[0];$nom=$carac[1];$prenom=$carac[2];$adresse=$carac[3];$cp=substr($carac[4],2,5);$ville=$carac[5];$notor=$carac[6];$conf=$carac[7];$type=$carac[8];
 			$lesTypes = getLesTypes();
 			include("vues/v_modificationPraticien.php");
 		} else {
@@ -64,8 +66,15 @@ switch ($action) {
 		break;
 	}
 	case 'enregistrermodif':{
-		$num=$_POST['num'];$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$region=$_POST['region'];$notor=$_POST['notor'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
-		if ( enregistrementPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$type,$region) ){
+		// var_dump($_POST);
+		$num=$_POST['num'];$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
+		$cp=$code.$cp;
+		$tmp=enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
+		if ( $tmp = 1){
+			$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
+			header("Location: index.php?uc=praticien&action=gererpraticien");
+		}elseif ($tmp = 2) {
+			$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été ajouté";
 			header("Location: index.php?uc=praticien&action=gererpraticien");
 		} else {
 			$_SESSION['erreur'] = true;
