@@ -9,7 +9,6 @@
                     <div class="form-group mb-2">
                         <label for="nom" class="control-label col-sm-2">Numéro*</label>
                         <input id="num" name="num" value="<?php echo $num ; ?>" class="form-control" disabled>
-                        <input id="num" name="num" value="<?php echo $num ; ?>" hidden>
                     </div>
 
                     <div class="form-group mb-2">
@@ -31,6 +30,7 @@
                             <?php
                                 foreach($depcode as $unDepCode){
                                     $dep = $unDepCode['DEP_NUM'];
+                                    if (strlen($dep)<2) $dep="0".$dep;
                                     if($code==$dep)
                                         echo '<option value="'.$dep.'" selected >'.$dep.'</option>';
                                     else
@@ -48,25 +48,25 @@
                     <div class="form-group mb-2">
                         <label for="region" class="control-label col-sm-2">Regions*</label>
                         <input id="region" name="region" value="<?php echo $region ; ?>" class="form-control" disabled> 
-                        <input id="region" name="region" value="<?php echo $region ; ?>" hidden> 
                     </div>
                     <div class="form-group mb-2">
                         <label for="notor" class="control-label col-sm-2">Notoriété*</label> 
                         <div class="input-group">
                             <input id="notor" name="notor" type="number" value="<?php echo $notor ; ?>" required class="form-control" step="0.5">  
-                            <span class="input-group-text">%</span>
+                            <!--<span class="input-group-text">%</span>-->
                         </div>
                     </div>
                     <div class="form-group mb-2">
                         <label for="conf" class="control-label col-sm-2">Confiance</label>
                         <div class="input-group">
                             <input id="conf" name="conf" type="number" value="<?php echo $conf ; ?>" class="form-control" step="0.5">
-                            <span class="input-group-text">%</span>
+                            <!--<span class="input-group-text">%</span>-->
                         </div>
                     </div>
                     <div class="form-group mb-2">
                         <label for="type" class="control-label col-sm-2">Type*</label>
                         <select id="type" name="type" class="form-select" required>
+                            <option value class="text-center" selected>- Choisissez un type -</option>
                             <?php 
                                 foreach($lesTypes as $unType){
                                     $idType = $unType['TYP_CODE'];
@@ -80,9 +80,9 @@
                         </select>
                     </div>
                     <div class="row form-row">
-                        <input class="btn btn-primary text-light valider col-4" type="submit" value="Enregistrer" name="enregistrer">
+                        <input class="btn btn-info text-light valider col-4" type="submit" value="Enregistrer" name="enregistrer">
                         <input class="btn btn-danger text-light valider col-4 mt-auto" type="reset" value="Réinitialiser" name="reinitialiser">
-                        <input class="btn btn-info text-light valider col-3 mt-auto" type="button" onclick="history.go(-1)" value="Retour" name="retour">
+                        <input class="btn btn-primary text-light valider col-3 mt-auto" type="button" onclick="history.go(-1)" value="Retour" name="retour">
                     </div>
                 </form>
             </div>

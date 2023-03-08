@@ -29,7 +29,7 @@
 
                 if ($action == 'gererpraticien'){
                     $link='index.php?uc=praticien&action=modifierpraticien';
-                    echo '<a href="index.php?uc=praticien&action=ajoutpraticien" class="btn btn-info text-light valider">Ajouter Praticien</a>';
+                    echo '<a href="index.php?uc=praticien&action=ajoutpraticien" class="btn btn-info text-light valider mb-5">Ajouter Praticien</a>';
                 } else
                     $link='index.php?uc=praticien&action=afficherpraticien';
                 ?>

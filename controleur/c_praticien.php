@@ -67,10 +67,12 @@ switch ($action) {
 	}
 	case 'enregistrermodif':{
 		// var_dump($_POST);
-		$num=$_POST['num'];$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
+		$num = getNumInutilisee();
+		$region = $_SESSION['region'];
+		$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
 		$cp=$code.$cp;
 		$tmp=enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
-		if ( $tmp = 1){
+		if ($tmp = 1){
 			$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
 			header("Location: index.php?uc=praticien&action=gererpraticien");
 		}elseif ($tmp = 2) {
