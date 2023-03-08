@@ -19,6 +19,7 @@ switch ($action) {
 			$data[$i][3] = getMotifRapport($key['rap_num'], $matricule)['MOT_CODE'];
 			$data[$i][4] = getDateRapport($key['rap_num'], $matricule);
 			$data[$i][5] = '';
+			$data[$i][6]=estBrouillon($key['rap_num'], $matricule);
 			$presente = getPresentesRapport($key['rap_num'], $matricule);
 			$presenteNom = getPresentesNomRapport($key['rap_num'], $matricule);
 			if(!is_null($presente['MED_DEPOTLEGAL'])){
@@ -26,9 +27,8 @@ switch ($action) {
 				if(!is_null($presente['MED_DEPOTLEGAL2'])){
 					$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL2'] . ' : ' . $presenteNom['med_nomcommercial2'] ;
 				}
-			$data[$i][6]=estBrouillon($key['rap_num'], $matricule);
-			}	
-			$i++;		
+			$i++;	
+			}		
 		}
 		$titre = array('Formulaire de vos rapports', 'Formulaire permettant d\'accéder aux rapports que vous avez rédigé et vos brouillons', 'Vos rapports :', 1);
 		include("vues/v_listeRapports.php");

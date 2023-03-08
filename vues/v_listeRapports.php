@@ -11,7 +11,8 @@
                 <img class="img-fluid size-img-page" src="assets/img/paperasse.jpg">
             </div>
             <div class="test col-12 col-sm-8 col-lg-6 col-xl-5 col-xxl-4 py-lg-5 py-3">
-                <?php if ($_SESSION['erreur']) {
+                <?php 
+                if ($_SESSION['erreur']) {
                     echo '<p class="alert alert-danger text-center w-100">Un problème est survenu lors de la selection du médicament</p>';
                     $_SESSION['erreur'] = false;
                 } ?>

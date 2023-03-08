@@ -15,14 +15,32 @@
                     if($content['pra_num_remplacant'])
                     {
                     ?>
-                        <p><span class="carac">Praticien absent</span> : <?php echo $content['pra_nom'].' '.$content['pra_prenom'] ?></p>
-                        <p><span class="carac">Praticien remplaçant</span> : <?php echo $content['pra_rem_nom'].' '.$content['pra_rem_prenom'] ?></p>
+
+                    <form method="POST" action="index.php?uc=praticien&action=afficherpraticien">
+                                <p><span class="carac">Praticien absent</span> : 
+                                    <input type="test" name="praticien" hidden value=<?php echo '"'.$content['pra_num_praticien'].'"'; ?>>
+                                    <input class="hyperlien" type="submit" value=<?php echo '"'.$content['pra_nom'].' '.$content['pra_prenom'].'"'; ?>>
+                                </p>
+                    </form>
+
+                    <form method="POST" action="index.php?uc=praticien&action=afficherpraticien">
+                                <p><span class="carac">Praticien absent</span> : 
+                                    <input type="test" name="praticien" hidden value=<?php echo '"'.$content['pra_num_remplacant'].'"'; ?>>
+                                    <input class="hyperlien" type="submit" value=<?php echo '"'.$content['pra_rem_nom'].' '.$content['pra_rem_prenom'].'"'; ?>>
+                                </p>
+                    </form>
                     <?php
                     }
                     else
                     {
                         ?>
-                    <p><span class="carac">Praticien rencontré</span> : <?php echo $content['pra_nom'].' '.$content['pra_prenom'] ?></p>
+                    <form method="POST" action="index.php?uc=praticien&action=afficherpraticien">
+                                <p><span class="carac">Praticien rencontré</span> : 
+                                    <input type="test" name="praticien" hidden value=<?php echo '"'.$content['pra_num_praticien'].'"'; ?>>
+                                    <input class="hyperlien" type="submit" value=<?php echo '"'.$content['pra_nom'].' '.$content['pra_prenom'].'"'; ?>>
+                                </p>
+                    </form>
+
                         <?php
                     }
                     ?>
@@ -47,9 +65,25 @@
 
                     <?php
                     if($presentes) {
-                        ?><p><span class="carac">Medicament présenté n°1</span> : <?php echo $presentes['med_nomcommercial1'] ?></p>
+                        ?>
+                        <form method="POST" action="index.php?uc=medicaments&action=affichermedoc">
+                            <p><span class="carac">Medicament présenté n°1</span> : 
+                                <input type="test" name="medicament" hidden value=<?php echo '"'.$content['med_depotlegal'].'"'; ?>>
+                                <input class="hyperlien" type="submit" value=<?php echo '"'.$presentes['med_nomcommercial1'].'"'; ?>>
+                            </p>
+                        </form>
                         <?php
-                        if(isset($presentes['med_nomcommercial2'])){                                                    ?><p><span class="carac">Medicament présenté n°1</span> : <?php echo $presentes['med_nomcommercial2'] ?></p><?php
+                        if(isset($presentes['med_nomcommercial2'])){?>
+                            <form method="POST" action="index.php?uc=medicaments&action=affichermedoc">
+                                <p><span class="carac">Medicament présenté n°2</span> : 
+                                    <input type="test" name="medicament" hidden value=<?php echo '"'.$content['med_depotlegal2'].'"'; ?>>
+                                    <input class="hyperlien" type="submit" value=<?php echo '"'.$presentes['med_nomcommercial2'].'"'; ?>>
+                                </p>
+                        </form>
+
+                        
+
+                        <?php
                         }
                     }
                     ?>
