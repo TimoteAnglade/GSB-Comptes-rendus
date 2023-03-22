@@ -21,6 +21,8 @@
                         case '2':
                             echo '<div class="alert alert-warning" role="alert">Veuillez saisir les dates</div>';
                             break;
+                        case '3':
+                            echo '<div class="alert alert-warning" role="alert">Il n\'existe aucun rapports de visite correrspondant à ces critères </div>';
                         }
                 } ?>
                 <form action="" method="get" class="formulaire-recherche col-12 m-0">
@@ -40,7 +42,7 @@
                     <input type="date" name="dateDeb">
                     <label class="titre-formulaire" for="listepra">Date de fin :</label>
                     <input type="date" name="dateFin">
-                    <input class="btn btn-info text-light valider" type="submit" value="Afficher ce rapport">
+                    <input class="btn btn-info text-light valider" type="submit" value="Valider">
                 </form>
             </div>
         </div>

@@ -60,7 +60,6 @@
             break;
         }
     }
-    var_dump($_SESSION); 
 ?>
 <?php include("vues/v_footer.php") ;?>
 </body>

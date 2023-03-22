@@ -68,7 +68,10 @@ switch ($action) {
 				$result = filtrerParPeriode($result, $matricule, $dateDeb, $dateFin);
 				if(!empty($_REQUEST['praticien'])){
 					$praticien = $_REQUEST['praticien'];
-					$result = flitrerParPraticien($result, $matricule, $praticien);	
+					$result = filtrerParPraticien($result, $matricule, $praticien);	
+				}
+				if(count($result)==0){
+					header("Location: index.php?uc=rapportdevisite&action=choisirDateMesRapports&erreur=3");
 				}
 				$data = array();
 				$i=0;
@@ -101,6 +104,34 @@ switch ($action) {
 		else{
 			header("Location: index.php?uc=rapportdevisite&action=choisirDateMesRapports&erreur=2");
 		}
+		break;
+	}
+	case 'nouveauRapportsRegion':{
+		$matricule = $_SESSION['matricule'];
+		$result = getRapports($matricule);
+		$data = array();
+		$i=0;
+		foreach($result as $key){
+			$data[$i] = array();
+			$data[$i][0] = $key['rap_num'];
+			$data[$i][1] = getPraticienRapport($key['rap_num'], $matricule);
+			$data[$i][2] = getNomPraticien(getPraticienRapport($key['rap_num'], $matricule));
+			$data[$i][3] = getMotifRapport($key['rap_num'], $matricule)['MOT_CODE'];
+			$data[$i][4] = getDateRapport($key['rap_num'], $matricule);
+			$data[$i][5] = '';
+			$data[$i][6]=estBrouillon($key['rap_num'], $matricule);
+			$presente = getPresentesRapport($key['rap_num'], $matricule);
+			$presenteNom = getPresentesNomRapport($key['rap_num'], $matricule);
+			if(!is_null($presente['MED_DEPOTLEGAL'])){
+				$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL'] . ' : ' . $presenteNom['med_nomcommercial1'] ;
+				if(!is_null($presente['MED_DEPOTLEGAL2'])){
+					$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL2'] . ' : ' . $presenteNom['med_nomcommercial2'] ;
+				}
+			$i++;	
+			}		
+		}
+		$titre = array('Formulaire de vos rapports', 'Formulaire permettant d\'accéder aux rapports que vous avez rédigé et vos brouillons', 'Vos rapports :', 1);
+		include("vues/v_listeRapports.php");
 		break;
 	}
 	default :

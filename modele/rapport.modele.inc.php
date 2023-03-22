@@ -93,8 +93,27 @@ function getRapportsCollaborateur($matricule) {
     try {
         $monPdo = connexionPDO();
         $req = 'SELECT rap_num
-        		FROM rapport_visite
-        		WHERE col_matricule="'.$matricule.'"
+                FROM rapport_visite
+                WHERE col_matricule="'.$matricule.'"
+                ORDER BY rap_date;';
+        $res = $monPdo->query($req);
+        $result = $res->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getRapportsCollaborateur($matricule) {
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT rap_num
+                FROM rapport_visite r
+                INNER JOIN collaborateur c
+                ON c.col_matricule = r.col_matricule
+                WHERE c.reg_code IN (SELECT REG_CODE where col_matricule = '.$matricule.' and TRA_ROLE="Délégué")
                 ORDER BY rap_date;';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
@@ -232,12 +251,28 @@ function filtrerParPeriode($liste, $matricule, $date1, $date2) {
     return $result;
 }
 
-function flitrerParPraticien($liste, $matricule, $praticien){
+function filtrerParPraticien($liste, $matricule, $praticien){
     $result = array();
     foreach($liste as $rapport){
         $praticienRap=getPraticienRapport($rapport['rap_num'], $matricule);
         if($praticien==$praticienRap)
         {
+            $result[]=$rapport;
+        }
+    }
+    return $result;
+}
+
+function isLu($matricule_lect, $rapport){
+    var_dump($rapport);
+    $req = "select * from a_lu_rapport where COL_MATRICULE_LECTEUR=".$matricule_lect." and "."1=1".";";
+    return true;
+}
+
+function filtrerParLu($liste, $matricule_lect){
+    $result = [];
+    foreach($liste as $raport){
+        if(isLu($rapport)){
             $result[]=$rapport;
         }
     }
