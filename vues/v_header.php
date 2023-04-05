@@ -33,6 +33,13 @@
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=voirMesRapports">Mes Rapports</a>
                         </li>
+                        <?php
+                            if ( $_SESSION['habilitation'] == 2 ){
+                                echo '<li class="nav-item ">
+                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=nouveauRapportsRegion">Nouveaux rapports</a>
+                        </li>';
+                            }
+                        ?>
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=medicaments&action=formulairemedoc">Médicaments</a>
                         </li>
