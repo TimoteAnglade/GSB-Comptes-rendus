@@ -27,19 +27,25 @@
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=accueil">Accueil</a>
                         </li>
+                        <?php if($_SESSION['habilitation']==1){ ?>
                         <li class="nav-item ">
-                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=choisirDateMesRapports">Rapports par période</a>
+                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=choisirDateMesRapports">Mes rapports par période</a>
                         </li>
+                        <?php }?>
+                        <!--
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=voirMesRapports">Mes Rapports</a>
                         </li>
+                        -->
                         <?php
-                            if ( $_SESSION['habilitation'] == 2 ){
-                                echo '<li class="nav-item ">
+                            if ( $_SESSION['habilitation'] == 2 ){ ?> 
+                                <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=nouveauRapportsRegion">Nouveaux rapports</a>
-                        </li>';
-                            }
-                        ?>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=historiqueFourchette">Historique des rapports</a>
+                        </li>
+                            <?php } ?>
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=medicaments&action=formulairemedoc">Médicaments</a>
                         </li>
@@ -47,12 +53,11 @@
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=praticien&action=formulairepraticien">Praticien</a>
                         </li>
                         <?php
-                            if ( $_SESSION['habilitation'] == 2 ){
-                                echo '<li class="nav-item ">
+                            if ( $_SESSION['habilitation'] == 2 ){ ?>
+                            <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=praticien&action=gererpraticien">Gestion Praticien</a>
-                        </li>';
-                            }
-                        ?>
+                        </li>
+                           <?php } ?>
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=connexion&action=profil">Profil</a>
                         </li>

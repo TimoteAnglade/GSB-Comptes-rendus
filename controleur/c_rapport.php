@@ -60,6 +60,7 @@ switch ($action) {
 			$content = getContenuRapport($rapport, $mat);
 			$presentes = getPresentesNomRapport($rapport, $mat);
 			$offres=getOffresRapport($rapport, $mat);	
+			lire($rapport, $mat, $matricule);
 		}
 		if(empty($content)){
 			include("vues/v_accueil.php");	
@@ -120,6 +121,7 @@ switch ($action) {
 	case 'nouveauRapportsRegion':{
 		$matricule = $_SESSION['matricule'];
 		$result = getRapportsRegion($matricule);
+		$result = filtrerParLu($result, $matricule);
 		$data = array();
 		$i=0;
 		foreach($result as $key){
@@ -142,8 +144,12 @@ switch ($action) {
 			$i++;	
 			}		
 		}
-		$titre = array('Formulaire de vos rapports', 'Formulaire permettant d\'accéder aux rapports que vous avez rédigé et vos brouillons', 'Vos rapports :', 1);
+		$titre = array('Nouveaux rapports de votre région', 'Formulaire permettant d\'accéder aux rapports non-lus qui ont été publiés dans votre région', 'Les rapports :', 1, 'Il n\'y a aucun rapport non-lu dans votre région');
 		include("vues/v_listeRapports.php");
+		break;
+	}
+	case 'saisirRapport' :{
+		$matricule = $_SESSION['matricule'];
 		break;
 	}
 	default :

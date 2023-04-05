@@ -29,8 +29,8 @@
                     <input type="text" name="uc" value="rapportdevisite" hidden>
                     <input type="text" name="action" value="voirRapportsFiltres" hidden>
                     <label class="titre-formulaire" for="listepra">Filtrer par praticien</label>
-                    <select name="praticien" class="form-select mt-3">
-                        <option value class="text-center">Aucun</option>
+                    <select name="praticien" class="form-select mt-3" <?php if(count($result)<=0){ echo 'disabled'; } ?>>
+                        <option value class="text-center"><?php if(count($result)<=0){ echo 'Aucun praticien disponible'; } else { echo 'Aucun';} ?></option>
                         <?php
                         foreach ($result as $key) {
                             echo '<option value="' . $key['PRA_NUM'] . '" class="form-control">' . $key['PRA_PRENOM'] . ' ' . $key['PRA_NOM'] . '</option>';

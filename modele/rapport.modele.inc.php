@@ -114,7 +114,7 @@ function getRapportsRegion($matricule) {
         SELECT col_matricule FROM travailler t WHERE reg_code=(
         SELECT reg_code FROM travailler WHERE col_matricule="'.$matricule.'" and tra_role="Délégué"
         ) AND tra_role="Visiteur"
-        );';
+        ) AND RAP_DEFINITIF=1;';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
 
@@ -281,17 +281,40 @@ function filtrerParPraticien($liste, $matricule, $praticien){
 }
 
 function isLu($matricule_lect, $rapport){
-    var_dump($rapport);
-    $req = "select * from a_lu_rapport where COL_MATRICULE_LECTEUR=".$matricule_lect." and "."1=1".";";
-    return true;
+    $monPdo = connexionPDO();
+    $matricule_redac = $rapport['col_matricule'];
+    $id = $rapport['rap_num'];
+    $req = "select * from a_lu_rapport where COL_MATRICULE_LECTEUR='".$matricule_lect."' and COL_MATRICULE_REDACTEUR='".$matricule_redac."'and rap_num=".$id.";";
+    $res = $monPdo->query($req);
+    $result = $res->fetch(PDO::FETCH_ASSOC);
+    $booleanRes = false;
+    if(!empty($result)){
+        if(count($result)>0){
+            $booleanRes=true;
+        }
+    }
+    return $booleanRes;
 }
 
 function filtrerParLu($liste, $matricule_lect){
     $result = [];
-    foreach($liste as $raport){
-        if(isLu($rapport)){
+    foreach($liste as $rapport){
+        if(!isLu($matricule_lect, $rapport)){
             $result[]=$rapport;
         }
     }
     return $result;
+}
+
+function lire($id, $matricule_redac, $matricule_lect) {
+    if(!isLu($matricule_lect, array('rap_num' => $id , 'col_matricule' => $matricule_redac))) {
+    try {
+    $monPdo = connexionPDO();
+    $req = $monPdo->prepare("insert into a_lu_rapport (COL_MATRICULE_LECTEUR, COL_MATRICULE_REDACTEUR, RAP_NUM) VALUES (:mat_lec,:mat_redac,:rap_num);");
+    $res = $req->execute(array('mat_lec'=>$matricule_lect, 'mat_redac'=>$matricule_redac, 'rap_num'=>$id));
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+    }
 }
