@@ -66,22 +66,27 @@ switch ($action) {
 		break;
 	}
 	case 'enregistrermodif':{
-		// var_dump($_POST);
-		$num = getNumInutilisee();
-		$region = $_SESSION['region'];
-		$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
-		$cp=$code.$cp;
-		$tmp=enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
-		if ($tmp = 1){
-			$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
-			header("Location: index.php?uc=praticien&action=gererpraticien");
-		}elseif ($tmp = 2) {
-			$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été ajouté";
-			header("Location: index.php?uc=praticien&action=gererpraticien");
-		} else {
-			$_SESSION['erreur'] = true;
-			$lesTypes = getLesTypes();
-			include("vues/v_modificationPraticien.php");
+		//var_dump($_POST);
+		if(isPostModifPraticienBon()){
+			$num = getNumInutilisee();
+			$region = $_SESSION['region'];
+			$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
+			$cp=$code.$cp;
+			$tmp=enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
+			if ($tmp = 1){
+				$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
+				header("Location: index.php?uc=praticien&action=gererpraticien");
+			}elseif ($tmp = 2) {
+				$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été ajouté";
+				header("Location: index.php?uc=praticien&action=gererpraticien");
+			} else {
+				$_SESSION['erreur'] = true;
+				$lesTypes = getLesTypes();
+				include("vues/v_modificationPraticien.php");
+			}
+		}
+		else{
+			header("location: index.php?uc=praticien&action=ajoutpraticien");
 		}
 		break;
 	}

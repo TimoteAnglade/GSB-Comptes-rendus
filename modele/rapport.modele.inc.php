@@ -106,15 +106,15 @@ function getRapportsCollaborateur($matricule) {
     }
 }
 
-function getRapportsCollaborateur($matricule) {
+function getRapportsRegion($matricule) {
     try {
         $monPdo = connexionPDO();
-        $req = 'SELECT rap_num
-                FROM rapport_visite r
-                INNER JOIN collaborateur c
-                ON c.col_matricule = r.col_matricule
-                WHERE c.reg_code IN (SELECT REG_CODE where col_matricule = '.$matricule.' and TRA_ROLE="Délégué")
-                ORDER BY rap_date;';
+        $req = 'SELECT r.rap_num, r.col_matricule FROM rapport_visite r
+        WHERE r.col_matricule in (
+        SELECT col_matricule FROM travailler t WHERE reg_code=(
+        SELECT reg_code FROM travailler WHERE col_matricule="'.$matricule.'" and tra_role="Délégué"
+        ) AND tra_role="Visiteur"
+        );';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
 
@@ -124,6 +124,8 @@ function getRapportsCollaborateur($matricule) {
         die();
     }
 }
+
+function filtrerLu(){}
 
 function getDateRapport($id, $matricule) {
     try {
@@ -153,6 +155,21 @@ function getPraticienRapport($id, $matricule) {
         print "Erreur !: " . $e->getMessage();
         die();
     }   
+}
+
+function estAutorise($id, $matriculeRap, $matriculePersonne){
+    $autorise = false;
+    $autorise = $autorise|empty($matriculeRap);
+    $autorise = $autorise|$matriculeRap==$matriculePersonne;
+
+    if(!$autorise){
+        $result = getRapportsRegion($matriculePersonne);
+        foreach($result as $key){
+            $autorise = $autorise|($key['rap_num']==$id&$key['col_matricule']==$matriculeRap);
+        }
+    }
+
+    return $autorise;
 }
 
 function estBrouillon($id, $matricule)

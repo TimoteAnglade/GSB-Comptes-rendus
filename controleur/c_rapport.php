@@ -45,11 +45,22 @@ switch ($action) {
 	case 'voirRapport': {
 		$matricule = $_SESSION['matricule'];
 		if(isset($_REQUEST['rapport'])) {
-			$rapport = $_REQUEST['rapport'];
+			$chaine = $_REQUEST['rapport'].'§';
 		}
-		$content = getContenuRapport($rapport, $matricule);
-		$presentes = getPresentesNomRapport($rapport, $matricule);
-		$offres=getOffresRapport($rapport, $matricule);
+		$rapportMatricule = explode('§', $chaine);
+		$rapport = $rapportMatricule[0];
+		$mat2 = $rapportMatricule[1];
+		if(empty($mat2)){
+			$mat=$matricule;
+		}
+		else{
+			$mat=$mat2;
+		}
+		if(estAutorise($rapport, $mat, $matricule)){
+			$content = getContenuRapport($rapport, $mat);
+			$presentes = getPresentesNomRapport($rapport, $mat);
+			$offres=getOffresRapport($rapport, $mat);	
+		}
 		if(empty($content)){
 			include("vues/v_accueil.php");	
 		}
@@ -108,20 +119,21 @@ switch ($action) {
 	}
 	case 'nouveauRapportsRegion':{
 		$matricule = $_SESSION['matricule'];
-		$result = getRapports($matricule);
+		$result = getRapportsRegion($matricule);
 		$data = array();
 		$i=0;
 		foreach($result as $key){
 			$data[$i] = array();
 			$data[$i][0] = $key['rap_num'];
-			$data[$i][1] = getPraticienRapport($key['rap_num'], $matricule);
-			$data[$i][2] = getNomPraticien(getPraticienRapport($key['rap_num'], $matricule));
-			$data[$i][3] = getMotifRapport($key['rap_num'], $matricule)['MOT_CODE'];
-			$data[$i][4] = getDateRapport($key['rap_num'], $matricule);
+			$data[$i][1] = getPraticienRapport($key['rap_num'], $key['col_matricule']);
+			$data[$i][2] = getNomPraticien(getPraticienRapport($key['rap_num'], $key['col_matricule']));
+			$data[$i][3] = getMotifRapport($key['rap_num'], $key['col_matricule'])['MOT_CODE'];
+			$data[$i][4] = getDateRapport($key['rap_num'], $key['col_matricule']);
 			$data[$i][5] = '';
-			$data[$i][6]=estBrouillon($key['rap_num'], $matricule);
-			$presente = getPresentesRapport($key['rap_num'], $matricule);
-			$presenteNom = getPresentesNomRapport($key['rap_num'], $matricule);
+			$data[$i][6] = estBrouillon($key['rap_num'], $key['col_matricule']);
+			$data[$i][7] = $key['col_matricule'];
+			$presente = getPresentesRapport($key['rap_num'], $key['col_matricule']);
+			$presenteNom = getPresentesNomRapport($key['rap_num'], $key['col_matricule']);
 			if(!is_null($presente['MED_DEPOTLEGAL'])){
 				$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL'] . ' : ' . $presenteNom['med_nomcommercial1'] ;
 				if(!is_null($presente['MED_DEPOTLEGAL2'])){

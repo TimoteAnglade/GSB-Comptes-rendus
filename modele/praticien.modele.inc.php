@@ -255,4 +255,54 @@ function getSpePraticien($num)
         die();
     }
 }
+
+function isPostModifPraticienBon()
+{
+    $isNom=isset($_POST['nom']);
+    if($isNom){
+        $isNom = empty($_POST['nom']);
+    }
+
+    $isPrenom=isset($_POST['prenom']);
+    if($isPrenom){
+        $isPrenom = empty($_POST['prenom']);
+    }
+
+    $isAdresse=isset($_POST['adresse']);
+    if($isAdresse){
+        $isAdresse = empty($_POST['adresse']);
+    }
+
+    $isDepcode=isset($_POST['depcode']);
+    if($isDepcode){
+        $isDepcode = empty($_POST['adresse']);
+    }
+
+    $isCp=isset($_POST['cp']);
+    if($isCp){
+        $isCp = empty($_POST['cp']);
+    }
+
+    $isVille=isset($_POST['ville']);
+    if($isVille){
+        $isVille = empty($_POST['ville']);
+    }
+
+    $isNotor=isset($_POST['notor']);
+    if($isNotor){
+        $isNotor = empty($_POST['notor']);
+    }
+
+    $isConf=isset($_POST['conf']);
+    if($isConf){
+        $isConf = empty($_POST['conf']);
+    }
+
+    $isType=isset($_POST['type']);
+    if($isType){
+        $isType = empty($_POST['type']);
+    }
+    $correct = $isNom&$isPrenom&$isAdresse&$isDepcode&$isCp&$isVille&$isNotor&$isConf&$isType;
+    return $correct;
+}
 ?>

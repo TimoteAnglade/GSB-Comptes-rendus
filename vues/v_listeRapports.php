@@ -25,7 +25,9 @@
                         <?php
                         foreach ($data as $key) {
                             if(($titre[3]==1 && $key[6]==1) || $key[6]==0){
-                                echo '<option value="' . $key[0] . '" class="form-control"';    
+                                echo '<option value="' . $key[0];
+                                if(isset($key[7])){ echo '§'.$key[7];}
+                                echo '" class="form-control"';    
                                 if($key[6]){echo 'style="font-style: italic; color: purple"';}
                                 echo '> Rapport n°' . $key[0] . ' : ' . $key[1] . ' | ' . $key[2] . ' | ' . $key[3] . ' | ' . $key[4] . $key[5] . '</option>';
                             }
