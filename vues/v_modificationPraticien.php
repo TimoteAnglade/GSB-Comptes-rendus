@@ -1,3 +1,11 @@
+<script>
+function validateFormPraticien() {
+    if (document.forms['praticien']['type'].value == '') { 
+        alert('Le type de praticien doit être indiqué'); 
+        return false;
+    }
+}
+</script>
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-6 pt-5">
@@ -5,7 +13,7 @@
         </div>
         <div class="row align-items-center justify-content-center">
             <div class="test col-12 col-sm-9 col-lg-7 col-xl-6 col-xxl-5 py-lg-6 py-4">
-                <form action="index.php?uc=praticien&action=enregistrermodif" method="post" class="formulaire form-horizontal">
+                <form name="praticien" action="index.php?uc=praticien&action=enregistrermodif" method="post" class="formulaire form-horizontal">
                     <div class="form-group mb-2">
                         <label for="nom" class="control-label col-sm-2">Numéro*</label>
                         <input id="num" name="num" value="<?php echo $num ; ?>" class="form-control" disabled>
@@ -65,8 +73,8 @@
                     </div>
                     <div class="form-group mb-2">
                         <label for="type" class="control-label col-sm-2">Type*</label>
-                        <select id="type" name="type" class="form-select" required>
-                            <option value class="text-center" selected>- Choisissez un type -</option>
+                        <select id="type" name="type" class="form-select" oninvalid="alert('!');" >
+                            <option value="" class="text-center" selected>- Choisissez un type -</option>
                             <?php 
                                 foreach($lesTypes as $unType){
                                     $idType = $unType['TYP_CODE'];
@@ -80,7 +88,7 @@
                         </select>
                     </div>
                     <div class="row form-row">
-                        <input class="btn btn-info text-light valider col-4" type="submit" value="Enregistrer" name="enregistrer">
+                        <input class="btn btn-info text-light valider col-4" type="submit" value="Enregistrer" name="enregistrer" onclick="return validateFormPraticien()" />
                         <input class="btn btn-danger text-light valider col-4 mt-auto" type="reset" value="Réinitialiser" name="reinitialiser">
                         <input class="btn btn-primary text-light valider col-3 mt-auto" type="button" onclick="history.go(-1)" value="Retour" name="retour">
                     </div>

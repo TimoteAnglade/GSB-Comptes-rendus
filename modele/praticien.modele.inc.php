@@ -237,4 +237,22 @@ function getNumInutilisee(){
         die();
     }
 }
+
+function getSpePraticien($num)
+{
+
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT s.SPE_LIBELLE,p.POS_DIPLOME,p.POS_COEFPRESCRIPTION
+        FROM posseder p
+        JOIN specialite s ON s.SPE_CODE=p.SPE_CODE
+        WHERE p.PRA_NUM='.$num.';';
+        $res = $monPdo->query($req);
+        $result = $res->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
 ?>
