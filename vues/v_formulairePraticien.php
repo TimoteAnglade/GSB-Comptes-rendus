@@ -9,7 +9,7 @@
         </div>
         <?php
             if ($_SESSION['rajout']) { 
-                echo '<div class="alert alert-success alert-dismissible fade show mx-auto col-5">
+                echo '<div class="alert alert-success alert-dismissible fade show mx-auto col-4">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button> 
                     '.$_SESSION['rajout'].'                   
                 </div>';
@@ -29,7 +29,7 @@
 
                 if ($action == 'gererpraticien'){
                     $link='index.php?uc=praticien&action=modifierpraticien';
-                    echo '<a href="index.php?uc=praticien&action=ajoutpraticien" class="btn btn-info text-light valider mb-5">Ajouter Praticien</a>';
+                    echo '<a href="index.php?uc=praticien&action=ajouterpraticien" class="btn btn-info text-light valider mb-5">Ajouter Praticien</a>';
                 } else
                     $link='index.php?uc=praticien&action=afficherpraticien';
                 ?>
