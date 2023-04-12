@@ -15,7 +15,6 @@ switch ($action) {
 		}
 
 	case 'afficherpraticien': {
-
 		if (isset($_REQUEST['praticien']) && getAllInfoPraticien($_REQUEST['praticien'])) {
 			$pra = $_REQUEST['praticien'];
 			$carac = getAllInfoPraticien($pra);
@@ -25,20 +24,11 @@ switch ($action) {
 			include("vues/v_afficherPraticien.php");
 		} else {
 			$_SESSION['erreur'] = true;
+			ob_clean();
 			header("Location: index.php?uc=praticien&action=formulairepraticien");
 		}
 		break;
 	}
-	case 'ajoutpraticien': {
-			$region = $_SESSION['region'];
-			$depcode = getDepartement($_SESSION['codeR']);
-			// var_dump(getNumInutilisee());
-			$num=getNumInutilisee();
-			$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='0';$conf='0';$type='';
-			$lesTypes = getLesTypes();
-			include("vues/v_modificationPraticien.php");
-			break;
-		}
 	case 'gererpraticien': {
 			$depcode = getDepartement($_SESSION['codeR']);
 			$code = $_SESSION['codeR'];
@@ -49,6 +39,17 @@ switch ($action) {
 			include("vues/v_formulairePraticien.php");
 			break;
 		}
+	case 'ajouterpraticien': {
+			$region = $_SESSION['region'];
+			$depcode = getDepartement($_SESSION['codeR']);
+			// var_dump(getNumInutilisee());
+			$num=getNumInutilisee();
+			$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='0';$conf='0';$type='';
+			$lesTypes = getLesTypes();
+			$action="insertmodif";
+			include("vues/v_modificationPraticien.php");
+			break;
+		}
 	case 'modifierpraticien': {
 		if (isset($_POST['praticien']) && getAllInfoPraticien($_POST['praticien'])) {
 			$pra = $_POST['praticien'];
@@ -57,40 +58,76 @@ switch ($action) {
 			$depcode = getDepartement($_SESSION['codeR']);
 			$region = $_SESSION['region'];
 			$num=$carac[0];$nom=$carac[1];$prenom=$carac[2];$adresse=$carac[3];$cp=substr($carac[4],2,5);$ville=$carac[5];$notor=$carac[6];$conf=$carac[7];$type=$carac[8];
-			$lesTypes = getLesTypes();
+			$lesTypes = getLesTypes();	
+			$action="updatemodif";
 			include("vues/v_modificationPraticien.php");
 		} else {
 			$_SESSION['erreur'] = true;
+			ob_clean();
 			header("Location: index.php?uc=praticien&action=gererpraticien");
 		}
 		break;
 	}
-	case 'enregistrermodif':{
+	case 'insertmodif': {
 		//var_dump($_POST);
 		if(isPostModifPraticienBon()){
-			$num = getNumInutilisee();
-			$region = $_SESSION['region'];
-			$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
-			$cp=$code.$cp;
-			$tmp=enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
-			if ($tmp = 1){
-				$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
-				header("Location: index.php?uc=praticien&action=gererpraticien");
-			}elseif ($tmp = 2) {
-				$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été ajouté";
-				header("Location: index.php?uc=praticien&action=gererpraticien");
+			if ($_POST['notor']>=0 && $_POST['conf']>=0) {
+				$num = getNumInutilisee();
+				$region = $_SESSION['region'];
+				$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
+				$cp=$code.$cp;
+				$tmp=insertPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
+				if ($tmp) {
+					$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été ajouté";
+					ob_clean();
+					header("Location: index.php?uc=praticien&action=gererpraticien");
+				} else {
+					$_SESSION['erreur'] = true;
+					$lesTypes = getLesTypes();
+					include("vues/v_modificationPraticien.php");
+				}
 			} else {
-				$_SESSION['erreur'] = true;
-				$lesTypes = getLesTypes();
-				include("vues/v_modificationPraticien.php");
+				ob_clean();
+				header("Location: index.php?uc=praticien&action=ajouterpraticien");
 			}
 		}
 		else{
-			header("location: index.php?uc=praticien&action=ajoutpraticien");
+			ob_clean();
+			header("Location: index.php?uc=praticien&action=gererpraticien");
+		}
+		break;
+	}
+	case 'updatemodif':{
+		//var_dump($_POST);
+		if(isPostModifPraticienBon()){
+			if ($_POST['notor']>=0 && $_POST['conf']>=0) {
+				$num = $_POST['num'] ;
+				$region = $_SESSION['region'];
+				$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
+				$cp=$code.$cp;
+				$tmp=updatePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
+				if ($tmp) {
+					$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
+					ob_clean();
+					header("Location: index.php?uc=praticien&action=gererpraticien");
+				} else {
+					$_SESSION['erreur'] = true;
+					$lesTypes = getLesTypes();
+					include("vues/v_modificationPraticien.php");
+				}
+			} else {
+				ob_clean();
+				header("location: index.php?uc=praticien&action=modifierpraticien");
+			}
+		}
+		else{
+			ob_clean();
+			header("location: index.php?uc=praticien&action=gererpraticien");
 		}
 		break;
 	}
 	default: {
+			ob_clean();
 			header('location: index.php?uc=connexion&action=connexion');
 			break;
 		}

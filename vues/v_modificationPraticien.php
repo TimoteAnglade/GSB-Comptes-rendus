@@ -1,8 +1,9 @@
 <script>
 function validateFormPraticien() {
-    if (document.forms['praticien']['type'].value == '') { 
-        alert('Le type de praticien doit être indiqué'); 
-        return false;
+    if ( document.forms['praticien']['type'].value == '' ) { 
+        if ( confirm("Vous n'avez pas sélectionner de type de praticien\nRestez sur la page ?") == true ) {
+            return false;
+        }
     }
 }
 </script>
@@ -13,7 +14,7 @@ function validateFormPraticien() {
         </div>
         <div class="row align-items-center justify-content-center">
             <div class="test col-12 col-sm-9 col-lg-7 col-xl-6 col-xxl-5 py-lg-6 py-4">
-                <form name="praticien" action="index.php?uc=praticien&action=enregistrermodif" method="post" class="formulaire form-horizontal">
+                <form name="praticien" action="index.php?uc=praticien&action=<?php echo $action; ?>" method="post" class="formulaire form-horizontal">
                     <div class="form-group mb-2">
                         <label for="nom" class="control-label col-sm-2">Numéro*</label>
                         <input id="num" name="num" value="<?php echo $num ; ?>" class="form-control" disabled>
@@ -60,14 +61,14 @@ function validateFormPraticien() {
                     <div class="form-group mb-2">
                         <label for="notor" class="control-label col-sm-2">Notoriété*</label> 
                         <div class="input-group">
-                            <input id="notor" name="notor" type="number" value="<?php echo $notor ; ?>" required class="form-control" step="0.5">  
+                            <input id="notor" name="notor" type="number" value="<?php echo $notor ; ?>" required class="form-control" step="0.5" min="0">  
                             <!--<span class="input-group-text">%</span>-->
                         </div>
                     </div>
                     <div class="form-group mb-2">
                         <label for="conf" class="control-label col-sm-2">Confiance</label>
                         <div class="input-group">
-                            <input id="conf" name="conf" type="number" value="<?php echo $conf ; ?>" class="form-control" step="0.5">
+                            <input id="conf" name="conf" type="number" value="<?php echo $conf ; ?>" class="form-control" step="0.5" min="0">
                             <!--<span class="input-group-text">%</span>-->
                         </div>
                     </div>

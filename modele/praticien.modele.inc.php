@@ -175,15 +175,11 @@ function getDepartement($regcode){
     }
 }
 
-function enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type){
+function updatePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type){
     $tmp = false;
     try {
         $monPdo = connexionPDO();
-        $req = $req = $monPdo->prepare('SELECT PRA_NUM FROM praticien WHERE PRA_NUM= :num');
-        $res = $req -> execute(array('num'=>$num));
-        $result = $req->fetch(PDO::FETCH_ASSOC);
-        if (!empty($result['PRA_NUM'])){
-            $req = $req = $monPdo->prepare('UPDATE praticien
+        $req = $monPdo->prepare('UPDATE praticien
             SET PRA_NOM= :nom,
             PRA_PRENOM= :prenom,
             PRA_ADRESSE= :adresse,
@@ -193,14 +189,23 @@ function enregistrePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,
             PRA_COEFCONFIANCE= :conf,
             TYP_CODE= :type
             WHERE PRA_NUM= :num');
-            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'conf'=>$conf,'type'=>$type));
-            $tmp = 1;
-        } else {
-            $req = $req = $monPdo->prepare('INSERT INTO praticien(PRA_NUM,PRA_NOM,PRA_PRENOM,PRA_ADRESSE,PRA_CP,PRA_VILLE,PRA_COEFNOTORIETE,PRA_COEFCONFIANCE,TYP_CODE) 
+        $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'conf'=>$conf,'type'=>$type));
+        $tmp = true;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+    return $tmp;
+}
+
+function insertPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type){
+    $tmp = false;
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare('INSERT INTO praticien(PRA_NUM,PRA_NOM,PRA_PRENOM,PRA_ADRESSE,PRA_CP,PRA_VILLE,PRA_COEFNOTORIETE,PRA_COEFCONFIANCE,TYP_CODE) 
             VALUES (:num,:nom,:prenom,:adresse,:cp,:ville,:notor,:conf,:type)');
-            $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'conf'=>$conf,'type'=>$type));
-            $tmp = 2;
-        }
+        $res = $req->execute(array('num'=>$num,'nom'=>$nom,'prenom'=>$prenom,'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'notor'=>$notor,'conf'=>$conf,'type'=>$type));
+        $tmp = true;
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
@@ -260,49 +265,49 @@ function isPostModifPraticienBon()
 {
     $isNom=isset($_POST['nom']);
     if($isNom){
-        $isNom = empty($_POST['nom']);
+        $isNom = !empty($_POST['nom']);
     }
 
     $isPrenom=isset($_POST['prenom']);
     if($isPrenom){
-        $isPrenom = empty($_POST['prenom']);
+        $isPrenom = !empty($_POST['prenom']);
     }
 
     $isAdresse=isset($_POST['adresse']);
     if($isAdresse){
-        $isAdresse = empty($_POST['adresse']);
+        $isAdresse = !empty($_POST['adresse']);
     }
 
     $isDepcode=isset($_POST['depcode']);
     if($isDepcode){
-        $isDepcode = empty($_POST['adresse']);
+        $isDepcode = !empty($_POST['adresse']);
     }
 
     $isCp=isset($_POST['cp']);
     if($isCp){
-        $isCp = empty($_POST['cp']);
+        $isCp = !empty($_POST['cp']);
     }
 
     $isVille=isset($_POST['ville']);
     if($isVille){
-        $isVille = empty($_POST['ville']);
+        $isVille = !empty($_POST['ville']);
     }
 
     $isNotor=isset($_POST['notor']);
     if($isNotor){
-        $isNotor = empty($_POST['notor']);
+        $isNotor = !empty($_POST['notor']);
     }
 
     $isConf=isset($_POST['conf']);
     if($isConf){
-        $isConf = empty($_POST['conf']);
+        $isConf = !empty($_POST['conf']);
     }
 
     $isType=isset($_POST['type']);
     if($isType){
-        $isType = empty($_POST['type']);
+        $isType = !empty($_POST['type']);
     }
-    $correct = $isNom&$isPrenom&$isAdresse&$isDepcode&$isCp&$isVille&$isNotor&$isConf&$isType;
+    $correct = $isNom&&$isPrenom&&$isAdresse&&$isDepcode&&$isCp&&$isVille&&$isNotor&&$isConf&&$isType;
     return $correct;
 }
 ?>
