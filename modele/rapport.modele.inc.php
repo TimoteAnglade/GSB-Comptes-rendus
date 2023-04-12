@@ -92,7 +92,7 @@ function getListePraticiensVisitePar($matricule){
 function getRapportsCollaborateur($matricule) {
     try {
         $monPdo = connexionPDO();
-        $req = 'SELECT rap_num
+        $req = 'SELECT RAP_NUM, COL_MATRICULE
                 FROM rapport_visite
                 WHERE col_matricule="'.$matricule.'"
                 ORDER BY rap_date;';
@@ -125,8 +125,6 @@ function getRapportsRegion($matricule) {
     }
 }
 
-function filtrerLu(){}
-
 function getDateRapport($id, $matricule) {
     try {
         $monPdo = connexionPDO();
@@ -138,7 +136,7 @@ function getDateRapport($id, $matricule) {
         return $result[0];
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
-        die();
+        return '';
     }   
 }
 
@@ -170,6 +168,19 @@ function estAutorise($id, $matriculeRap, $matriculePersonne){
     }
 
     return $autorise;
+}
+
+function filtrerParBrouillon($liste, $matricule){
+    $result = array();
+    foreach($liste as $rapport){
+        if($rapport['COL_MATRICULE']==$matricule){
+            if(estBrouillon($rapport['RAP_NUM'],$rapport['COL_MATRICULE']))
+            {
+                $result[]=$rapport;
+            }
+        }
+    }
+    return $result;
 }
 
 function estBrouillon($id, $matricule)
@@ -256,10 +267,15 @@ function getMotifRapport($id, $matricule)
     }
 }
 
-function filtrerParPeriode($liste, $matricule, $date1, $date2) {
+function filtrerParPeriode($liste, $matricule, $date1, $date2, $special=0) {
     $result = array();
     foreach($liste as $rapport){
-        $dateRap=date_create(getDateRapport($rapport['rap_num'], $matricule));
+        if($special){
+            $date = getDateRapport($rapport['rap_num'], $rapport['col_matricule']);
+        } else {
+            $date = getDateRapport($rapport['rap_num'], $matricule);
+        }
+        $dateRap=date_create($date);
         if(($dateRap>=$date1)&&($dateRap<=$date2))   
         {
             $result[]=$rapport;
@@ -273,6 +289,18 @@ function filtrerParPraticien($liste, $matricule, $praticien){
     foreach($liste as $rapport){
         $praticienRap=getPraticienRapport($rapport['rap_num'], $matricule);
         if($praticien==$praticienRap)
+        {
+            $result[]=$rapport;
+        }
+    }
+    return $result;
+}
+
+function filtrerParCollaborateur($liste, $matricule, $collaborateur){
+    $result = array();
+    foreach($liste as $rapport){
+        $colRap=$rapport['col_matricule'];
+        if($matricule==$colRap)
         {
             $result[]=$rapport;
         }
@@ -306,6 +334,16 @@ function filtrerParLu($liste, $matricule_lect){
     return $result;
 }
 
+function filtrerParNonLu($liste, $matricule_lect){
+    $result = [];
+    foreach($liste as $rapport){
+        if(isLu($matricule_lect, $rapport)){
+            $result[]=$rapport;
+        }
+    }
+    return $result;
+}
+
 function lire($id, $matricule_redac, $matricule_lect) {
     if(!isLu($matricule_lect, array('rap_num' => $id , 'col_matricule' => $matricule_redac))) {
     try {
@@ -316,5 +354,26 @@ function lire($id, $matricule_redac, $matricule_lect) {
         print "Erreur !: " . $e->getMessage();
         die();
     }
+    }
+}
+
+function getInfoCollaborateurParDelegue($matricule)
+{
+
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT c.COL_MATRICULE, c.COL_NOM, c.COL_PRENOM FROM rapport_visite r
+        INNER JOIN collaborateur c ON c.col_matricule = r.col_matricule
+        WHERE r.col_matricule in (
+        SELECT col_matricule FROM travailler t WHERE reg_code=(
+        SELECT reg_code FROM travailler WHERE col_matricule="'.$matricule.'" and tra_role="Délégué"
+        ) AND tra_role="Visiteur"
+        ) AND RAP_DEFINITIF=1;';
+        $res = $monPdo->query($req);
+        $result = $res->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
     }
 }

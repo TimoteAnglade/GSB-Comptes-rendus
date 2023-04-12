@@ -2,6 +2,7 @@
     <title>Projet GSB</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="assets/js/custom.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/boxicon.min.css" rel="stylesheet">
@@ -13,6 +14,7 @@
 </head>
 
 <body>
+    <header>
     <nav id="main_nav" class="navbar navbar-expand-lg navbar-light bg-white shadow">
         <div class="menuCont container">
             <a class="navbar-brand h1 my-2" href="index.php?uc=accueil">
@@ -32,11 +34,9 @@
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=choisirDateMesRapports">Mes rapports par période</a>
                         </li>
                         <?php }?>
-                        <!--
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=voirMesRapports">Mes Rapports</a>
                         </li>
-                        -->
                         <?php
                             if ( $_SESSION['habilitation'] == 2 ){ ?> 
                                 <li class="nav-item ">
@@ -58,7 +58,7 @@
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=praticien&action=gererpraticien">Gestion Praticien</a>
                         </li>
                            <?php } ?>
-                        <li class="nav-item ">
+                        <li class="nav-item">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=connexion&action=profil">Profil</a>
                         </li>
                         <li class="nav-item">
@@ -69,3 +69,4 @@
             </div>
         </div>
     </nav>
+    </header>

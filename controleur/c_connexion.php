@@ -8,6 +8,7 @@ switch ($action) {
 	case 'connexion': {
 
 			if (isset($_SESSION['login'])) {
+				ob_clean();
 				header('Location: index.php?uc=connexion&action=profil');
 			} else {
 				include("vues/v_connexion.php");

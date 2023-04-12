@@ -1,9 +1,9 @@
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-5 pt-4">
-            <h1 class="titre text-center">Choisissez une période</h1>
+            <h1 class="titre text-center"><?php echo $titre[1]; ?></h1>
             <p class="text text-center">
-                Choisissez une période parmi laquelle vous voulez voir vos rapports
+                <?php echo $titre[2]; ?>
             </p>
         </div>
         <div class="row align-items-center justify-content-center">
@@ -27,13 +27,32 @@
                 } ?>
                 <form action="" method="get" class="formulaire-recherche col-12 m-0">
                     <input type="text" name="uc" value="rapportdevisite" hidden>
-                    <input type="text" name="action" value="voirRapportsFiltres" hidden>
+                    <?php
+                        if($titre[0]){
+                            ?>
+                                <input type="text" name="action" value="voirHistoriqueFiltre" hidden>
+                            <?php
+                        } else {
+                            ?>
+                                <input type="text" name="action" value="voirRapportsFiltres" hidden>
+                            <?php
+                        }
+                        ?>
                     <label class="titre-formulaire" for="listepra">Filtrer par praticien</label>
-                    <select name="praticien" class="form-select mt-3" <?php if(count($result)<=0){ echo 'disabled'; } ?>>
+                    <select name=<?php if($titre[0]){ echo '"collaborateur"'; } else { echo '"praticien"'; }?>
+                    class="form-select mt-3"
+                    <?php if(count($result)<=0){ echo 'disabled'; } ?>>
                         <option value class="text-center"><?php if(count($result)<=0){ echo 'Aucun praticien disponible'; } else { echo 'Aucun';} ?></option>
                         <?php
                         foreach ($result as $key) {
-                            echo '<option value="' . $key['PRA_NUM'] . '" class="form-control">' . $key['PRA_PRENOM'] . ' ' . $key['PRA_NOM'] . '</option>';
+                            if($titre[0]){
+                                $num = $key['COL_MATRICULE'];
+                                $nom = $key['COL_NOM']." ".$key['COL_PRENOM'];
+                            } else {
+                                $num = $key['PRA_NUM'];
+                                $nom = $key['PRA_PRENOM']." ".$key['PRA_NOM'];
+                            }
+                            echo '<option value="' . $num . '" class="form-control">' . $nom . '</option>';
                         }
                         ?>
                     </select>

@@ -53,6 +53,22 @@ function getSecteurCollaborateur($matricule)
     }
 }
 
+function getRegionCollaborateur($matricule)
+{
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT `REG_CODE` 
+        FROM travailler t
+        WHERE `COL_MATRICULE`="'.$matricule.'"';
+        $res = $monPdo->query($req);
+        $result = $res->fetch();
+        return $result[0];
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
 function checkConnexion($username, $mdp)
 {
 
