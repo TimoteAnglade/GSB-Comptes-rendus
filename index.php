@@ -1,3 +1,4 @@
+<?php ob_start(); ?><!DOCTYPE HTML>
 <?php
     require_once ('modele/medicament.modele.inc.php');
     require_once ('modele/praticien.modele.inc.php');
