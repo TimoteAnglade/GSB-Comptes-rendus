@@ -245,10 +245,9 @@ function getNumInutilisee(){
 
 function getSpePraticien($num)
 {
-
     try {
         $monPdo = connexionPDO();
-        $req = 'SELECT s.SPE_LIBELLE,p.POS_DIPLOME,p.POS_COEFPRESCRIPTION
+        $req = 'SELECT p.SPE_CODE,s.SPE_LIBELLE,p.POS_DIPLOME,p.POS_COEFPRESCRIPTION
         FROM posseder p
         JOIN specialite s ON s.SPE_CODE=p.SPE_CODE
         WHERE p.PRA_NUM='.$num.';';
@@ -260,6 +259,58 @@ function getSpePraticien($num)
         die();
     }
 }
+
+function getSpecialite()
+{
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT SPE_CODE,SPE_LIBELLE
+        FROM specialite;';
+        $res = $monPdo->query($req);
+        $result = $res->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function addSpecialite($praNum,$spe)
+{
+    $tmp = false;
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare('INSERT INTO posseder(PRA_NUM,SPE_CODE,POS_DIPLOME,POS_COEFPRESCRIPTION) VALUES (:num,:code,:dipl,:coef)');
+        foreach ($spe as $key => $var){
+            $code = $key ;
+            $dipl = $var['dipl'];
+            $coef = $var['coef'];
+            $result = $req->execute(array('num' => $praNum,'code' => $code,'dipl' => $dipl,'coef' => $coef));
+        }
+        $tmp = true;
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+    return $tmp;
+}
+
+function updateSpe($praNum,$spe)
+{
+    $tmp = false;
+    try {
+        $monPdo = connexionPDO();
+        $req = $monPdo->prepare('DELETE FROM posseder
+            WHERE PRA_NUM = :num');
+        $res = $req->execute(array('num'=>$praNum));
+        $tmp = addSpecialite($praNum,$spe);
+    } catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+    return $tmp;
+}
+
 
 function isPostModifPraticienBon()
 {
@@ -293,7 +344,7 @@ function isPostModifPraticienBon()
         $isVille = !empty($_POST['ville']);
     }
 
-    $isNotor=isset($_POST['notor']);
+    /*$isNotor=isset($_POST['notor']);
     if($isNotor){
         $isNotor = !empty($_POST['notor']);
     }
@@ -301,13 +352,13 @@ function isPostModifPraticienBon()
     $isConf=isset($_POST['conf']);
     if($isConf){
         $isConf = !empty($_POST['conf']);
-    }
+    }*/
 
     $isType=isset($_POST['type']);
     if($isType){
         $isType = !empty($_POST['type']);
     }
-    $correct = $isNom&&$isPrenom&&$isAdresse&&$isDepcode&&$isCp&&$isVille&&$isNotor&&$isConf&&$isType;
+    $correct = $isNom&&$isPrenom&&$isAdresse&&$isDepcode&&$isCp&&$isVille&&/*$isNotor&&$isConf&&*/$isType;
     return $correct;
 }
 ?>

@@ -21,6 +21,7 @@ switch ($action) {
 			$code = substr($carac[4],0,2);
 			$regfonc = getRegionParDep($code);
 			$region = $regfonc['REG_NOM'];
+			$lesSpePra=getSpePraticien($pra);
 			include("vues/v_afficherPraticien.php");
 		} else {
 			$_SESSION['erreur'] = true;
@@ -30,22 +31,24 @@ switch ($action) {
 		break;
 	}
 	case 'gererpraticien': {
-			$depcode = getDepartement($_SESSION['codeR']);
-			$code = $_SESSION['codeR'];
-			$result = getInfoPraticienParRegion($code);
-			$word = "Gestion des praticien";
-			$quote = "d'afficher et de gérer";
-			$button = "Modifier";
-			include("vues/v_formulairePraticien.php");
-			break;
-		}
+		unset($_SESSION['PraNumModifier']);
+		$depcode = getDepartement($_SESSION['codeR']);
+		$code = $_SESSION['codeR'];
+		$result = getInfoPraticienParRegion($code);
+		$word = "Gestion des praticien";
+		$quote = "d'afficher et de gérer";
+		$button = "Modifier";
+		include("vues/v_formulairePraticien.php");
+		break;
+	}
 	case 'ajouterpraticien': {
 			$region = $_SESSION['region'];
 			$depcode = getDepartement($_SESSION['codeR']);
 			// var_dump(getNumInutilisee());
 			$num=getNumInutilisee();
-			$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='0';$conf='0';$type='';
+			$nom='';$prenom='';$adresse='';$cp='';$ville='';$notor='0';$conf='0';$type='';$lesSpePra='';
 			$lesTypes = getLesTypes();
+			$lesSpe = getSpecialite();
 			$action="insertmodif";
 			include("vues/v_modificationPraticien.php");
 			break;
@@ -58,7 +61,16 @@ switch ($action) {
 			$depcode = getDepartement($_SESSION['codeR']);
 			$region = $_SESSION['region'];
 			$num=$carac[0];$nom=$carac[1];$prenom=$carac[2];$adresse=$carac[3];$cp=substr($carac[4],2,5);$ville=$carac[5];$notor=$carac[6];$conf=$carac[7];$type=$carac[8];
-			$lesTypes = getLesTypes();	
+			$_SESSION['PraNumModifier']=$num;
+			$spe = getSpePraticien($num);
+			//var_dump($spe);
+			$lesSpePra = array();
+			foreach ($spe as $uneSpe) {
+				$lesSpePra[$uneSpe['SPE_CODE']] = array('lib' => $uneSpe['SPE_LIBELLE'],'dipl' => $uneSpe['POS_DIPLOME'],'coef' => $uneSpe['POS_COEFPRESCRIPTION']);
+			}
+			//var_dump($lesSpePra);
+			$lesTypes = getLesTypes();
+			$lesSpe = getSpecialite();
 			$action="updatemodif";
 			include("vues/v_modificationPraticien.php");
 		} else {
@@ -76,7 +88,18 @@ switch ($action) {
 				$region = $_SESSION['region'];
 				$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
 				$cp=$code.$cp;
+
+				$lesSpePra = array();
+				foreach ($_POST as $key => $value){
+					$pos = strpos($key,"dip");
+					if($pos){
+						$idSpe = strstr($key,"dip",true);
+						$spe[$idSpe] = array('dipl' => $_POST[$idSpe."dip"],'coef' => $_POST[$idSpe."coef"]);
+					}
+				}
+				//var_dump($spe);
 				$tmp=insertPraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
+				$tmp= $tmp && addSpecialite($num,$spe);
 				if ($tmp) {
 					$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été ajouté";
 					ob_clean();
@@ -84,6 +107,14 @@ switch ($action) {
 				} else {
 					$_SESSION['erreur'] = true;
 					$lesTypes = getLesTypes();
+					$lesSpe = getSpecialite();
+					$spe = getSpePraticien($num);
+					//var_dump($spe);
+					$lesSpePra = array();
+					foreach ($spe as $uneSpe) {
+						$lesSpePra[$uneSpe['SPE_CODE']] = array('lib' => $uneSpe['SPE_LIBELLE'],'dipl' => $uneSpe['POS_DIPLOME'],'coef' => $uneSpe['POS_COEFPRESCRIPTION']);
+					}
+					//var_dump($lesSpePra);
 					include("vues/v_modificationPraticien.php");
 				}
 			} else {
@@ -101,18 +132,37 @@ switch ($action) {
 		//var_dump($_POST);
 		if(isPostModifPraticienBon()){
 			if ($_POST['notor']>=0 && $_POST['conf']>=0) {
-				$num = $_POST['num'] ;
+				$num = $_SESSION['PraNumModifier'] ;
 				$region = $_SESSION['region'];
 				$nom=$_POST['nom'];$prenom=$_POST['prenom'];$adresse=$_POST['adresse'];$code=$_POST['depcode'];$cp=$_POST['cp'];$ville=$_POST['ville'];$notor=$_POST['notor'];$conf=$_POST['conf'];$type=$_POST['type'];$depcode=getDepartement($_SESSION['codeR']);
 				$cp=$code.$cp;
-				$tmp=updatePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type);
+
+				$spe = array();
+				foreach ($_POST as $key => $value){
+					$pos = strpos($key,"dip");
+					if($pos){
+						$idSpe = strstr($key,"dip",true);
+						$spe[$idSpe] = array('dipl' => $_POST[$idSpe."dip"],'coef' => $_POST[$idSpe."coef"]);
+					}
+				}
+				//var_dump($spe);
+				$tmp=updatePraticien($num,$nom,$prenom,$adresse,$cp,$ville,$notor,$conf,$type) && updateSpe($num,$spe);
 				if ($tmp) {
 					$_SESSION['rajout'] = "<strong>".$nom."</strong> a bien été modifié";
+					unset($_SESSION['PraNumModifier']);
 					ob_clean();
 					header("Location: index.php?uc=praticien&action=gererpraticien");
 				} else {
 					$_SESSION['erreur'] = true;
 					$lesTypes = getLesTypes();
+					$lesSpe = getSpecialite();
+					$spe = getSpePraticien($num);
+					//var_dump($spe);
+					$lesSpePra = array();
+					foreach ($spe as $uneSpe) {
+						$lesSpePra[$uneSpe['SPE_CODE']] = array('lib' => $uneSpe['SPE_LIBELLE'],'dipl' => $uneSpe['POS_DIPLOME'],'coef' => $uneSpe['POS_COEFPRESCRIPTION']);
+					}
+					//var_dump($lesSpePra);
 					include("vues/v_modificationPraticien.php");
 				}
 			} else {
@@ -121,6 +171,7 @@ switch ($action) {
 			}
 		}
 		else{
+			unset($_SESSION['PraNumModifier']);
 			ob_clean();
 			header("location: index.php?uc=praticien&action=gererpraticien");
 		}
