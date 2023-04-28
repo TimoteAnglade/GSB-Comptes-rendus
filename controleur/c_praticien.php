@@ -1,4 +1,5 @@
 <?php
+//var_dump($_SESSION);
 if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 	$action = "formulairepraticien";
 } else {
@@ -54,6 +55,9 @@ switch ($action) {
 			break;
 		}
 	case 'modifierpraticien': {
+		if (isset($_SESSION['PraNumModifier'])) {
+			$_POST['praticien']=$_SESSION['PraNumModifier'];
+		}
 		if (isset($_POST['praticien']) && getAllInfoPraticien($_POST['praticien'])) {
 			$pra = $_POST['praticien'];
 			$carac = getAllInfoPraticien($pra);
@@ -121,16 +125,21 @@ switch ($action) {
 				ob_clean();
 				header("Location: index.php?uc=praticien&action=ajouterpraticien");
 			}
-		}
-		else{
+		} else {
+			if ($_POST['type'] == '') {
+				$action = "gererpraticien";
+			} else {
+				$_SESSION['form']= msgErrorFormPraticien();
+				$action = "ajouterpraticien";
+			}
 			ob_clean();
-			header("Location: index.php?uc=praticien&action=gererpraticien");
+			header("Location: index.php?uc=praticien&action=".$action);
 		}
 		break;
 	}
 	case 'updatemodif':{
 		//var_dump($_POST);
-		if(isPostModifPraticienBon()){
+		if(isPostModifPraticienBon()) {
 			if ($_POST['notor']>=0 && $_POST['conf']>=0) {
 				$num = $_SESSION['PraNumModifier'] ;
 				$region = $_SESSION['region'];
@@ -169,18 +178,24 @@ switch ($action) {
 				ob_clean();
 				header("location: index.php?uc=praticien&action=modifierpraticien");
 			}
-		}
-		else{
-			unset($_SESSION['PraNumModifier']);
+		} else {
+			if ($_POST['type']== '') {
+				unset($_SESSION['PraNumModifier']);
+				$action = "gererpraticien";
+			} else {
+				$_SESSION['form']= msgErrorFormPraticien();
+				$action = "modifierpraticien";
+			}
 			ob_clean();
-			header("location: index.php?uc=praticien&action=gererpraticien");
+			header("Location: index.php?uc=praticien&action=".$action);
 		}
 		break;
 	}
+
 	default: {
-			ob_clean();
-			header('location: index.php?uc=connexion&action=connexion');
-			break;
-		}
+		ob_clean();
+		header('location: index.php?uc=connexion&action=connexion');
+		break;
+	}
 }
 ?>

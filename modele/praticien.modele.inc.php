@@ -361,4 +361,35 @@ function isPostModifPraticienBon()
     $correct = $isNom&&$isPrenom&&$isAdresse&&$isDepcode&&$isCp&&$isVille&&/*$isNotor&&$isConf&&*/$isType;
     return $correct;
 }
+
+function msgErrorFormPraticien()
+{
+    $msg="";
+    $isNom=isset($_POST['nom']);
+    if($isNom){
+        if (empty($_POST['nom'])) $msg = $msg."<li>Nom</li>";
+    }
+
+    $isPrenom=isset($_POST['prenom']);
+    if($isPrenom){
+        if (empty($_POST['prenom'])) $msg = $msg."<li>Prénom</li>";
+    }
+
+    $isAdresse=isset($_POST['adresse']);
+    if($isAdresse){
+        if (empty($_POST['adresse'])) $msg = $msg."<li>Adresse</li>";
+    }
+
+    $isCp=isset($_POST['depcode']) || isset($_POST['cp']);
+    if($isCp){
+        if (empty($_POST['depcode']) || empty($_POST['cp'])) $msg = $msg."<li>Code postal</li>";
+    }
+
+    $isVille=isset($_POST['ville']);
+    if($isVille){
+        if (empty($_POST['ville'])) $msg = $msg."<li>Ville</li>";
+    }
+
+    return $msg;
+}
 ?>

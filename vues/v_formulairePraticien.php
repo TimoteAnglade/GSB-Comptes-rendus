@@ -8,13 +8,15 @@
             </p>
         </div>
         <?php
+        if (isset($_SESSION['rajout'])){
             if ($_SESSION['rajout']) { 
                 echo '<div class="alert alert-success alert-dismissible fade show mx-auto col-5">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button> 
                     '.$_SESSION['rajout'].'                   
                 </div>';
-                $_SESSION['rajout'] = false;
+                unset($_SESSION['rajout']);
             }
+        }
         ?>
         <div class="row align-items-center justify-content-center">
             <div class="test col-12 col-sm-8 col-lg-6 col-xl-5 col-xxl-4 py-lg-5">
@@ -22,9 +24,11 @@
             </div>
             <div class="test col-12 col-sm-8 col-lg-6 col-xl-5 col-xxl-4 py-lg-5 py-3">
                 <?php 
-                if ($_SESSION['erreur']) {
-                    echo '<p class="alert alert-danger text-center w-100">Un problème est survenu lors de la selection du praticien</p>';
-                    $_SESSION['erreur'] = false;
+                if (isset($_SESSION['erreur'])){
+                    if ($_SESSION['erreur']) {
+                        echo '<p class="alert alert-danger text-center w-100">Un problème est survenu lors de la selection du praticien</p>';
+                        unset($_SESSION['erreur']);
+                    }
                 } 
 
                 if ($action == 'gererpraticien'){
