@@ -149,10 +149,6 @@ switch ($action) {
 		include("vues/v_listeRapports.php");
 		break;
 	}
-	case 'saisirRapport' :{
-		$matricule = $_SESSION['matricule'];
-		break;
-	}
 	case 'historiqueFourchette' :{
 		$matricule = $_SESSION['matricule'];
 		$result = getInfoCollaborateurParDelegue($matricule);
@@ -252,21 +248,65 @@ switch ($action) {
 				if(estBrouillon($_REQUEST['rapport'], $matricule)){
 					$rapport=$_REQUEST['rapport'];
 					$prerempli = getContenuRapport($rapport, $matricule);
-					var_dump($prerempli);
+					$prerempli['matricule'] = $matricule;
 				}
 				else{
-					$isNew=true;
+					$isNew = 1;
 				}
 			}
 			if($isNew){
-
+				$prerempli = array(
+					'matricule' => $matricule,
+					'rap_num' => NULL, 
+					'col_nom' => NULL, 
+					'col_prenom' => NULL, 
+					'pra_num_praticien' => NULL, 
+					'pra_nom' => NULL, 
+					'pra_prenom' => NULL, 
+					'pra_num_remplacant' => NULL, 
+					'pra_rem_nom' => NULL, 
+					'pra_rem_prenom' => NULL, 
+					'rap_date' => NULL, 
+					'rap_bilan' => NULL, 
+					'mot_code' => NULL, 
+					'rap_motif_autre' => NULL, 
+					'rap_definitif' => NULL, 
+					'med_depotlegal' => NULL, 
+					'med_depotlegal2' => NULL, 
+				);
 			}
+			var_dump($prerempli);
+			$motifs = getAllMotifs();
+			$medocs = getAllNomMedicament();
 			include("vues/v_saisieRapport.php");
 		}
 		else {
 			include("vues/v_accueil.php");
 		}
 		break;
+	}
+	case "confirmerRapport" :
+	{
+		$matricule = $_REQUEST['matricule'];
+		$rapport = $_REQUEST['rapport'];
+		$praticien = $_REQUEST['praticien'];
+		$praticienremp = $_REQUEST['praticienremp'];
+		$bilanContent = $_REQUEST['bilanContent'];
+		$medicamentproposer = $_REQUEST['medicamentproposer'];
+		$medicamentproposer2 = $_REQUEST['medicamentproposer2'];
+		$motifautre = $_REQUEST['motif-autre'];
+		$echantillions=[];
+		if($_REQUEST['echantillions']=='on'){
+			for($i=1;$i<=10;) {
+				$echantillion[] = $_REQUEST['variable'+$i]
+			}
+		}
+		$matricule = $_REQUEST['matricule'];
+		$matricule = $_REQUEST['matricule'];
+		$matricule = $_REQUEST['matricule'];
+		$matricule = $_REQUEST['matricule'];
+		$matricule = $_REQUEST['matricule'];
+		//ajoutOuModif();
 	}
 	default :
 	{

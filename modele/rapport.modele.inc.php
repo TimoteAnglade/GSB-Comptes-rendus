@@ -377,3 +377,44 @@ function getInfoCollaborateurParDelegue($matricule)
         die();
     }
 }
+
+function assigner($texte)
+{
+    $result = "";
+    if(isset($_REQUEST[$texte])){
+        if(empty($_REQUEST[$texte])){
+        $result = $_REQUEST[$texte];
+        }
+    }
+    return $result;
+}
+
+function getAllMotifs()
+{
+    try{
+            $monPdo = connexionPDO();
+            $req = 'SELECT MOT_CODE, MOT_LIBELLE FROM motif';
+            $res = $monPdo->query($req);
+            $result = $res->fetchAll();
+            return $result;
+        } 
+
+        catch (PDOException $e){
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+}
+
+function ajoutOuModif($vraimatricule, $matricule_redac, $rapport, $praticien, $praticienremp, $bilan, $dateVis, $medicament1, $medicament2, $motif, $motifautre, $echantillon, $brouillon)
+{
+    $canEdit=true;
+    $canEdit=$canEdit&&$matricule==$vraimatricule;
+
+    //vérification de si le rapport existe et est éditable
+    $monPdo = connexionPDO();
+    $req="SELECT count(rap_num) FROM rapport_visite WHERE col_matricule=:mat AND rap_num=:rap AND rap_definitif=0";
+    $req = $monPdo->prepare($req);
+    $res = $req->execute(array('mat'=>$vraimatricule, 'rap'=>$rapport));
+    $res = $res->fetch();
+    var_dump($res);
+}
