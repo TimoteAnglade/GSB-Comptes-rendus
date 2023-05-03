@@ -192,7 +192,12 @@ function estBrouillon($id, $matricule)
                 WHERE rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
         $res = $monPdo->query($req);
         $result = $res->fetch();
-        return $result[0];
+        if($result){
+            return $result[0];   
+        }
+        else{
+            return [];
+        }
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
@@ -417,4 +422,17 @@ function ajoutOuModif($vraimatricule, $matricule_redac, $rapport, $praticien, $p
     $res = $req->execute(array('mat'=>$vraimatricule, 'rap'=>$rapport));
     $res = $res->fetch();
     var_dump($res);
+}
+function getEchantillions($rapport, $matricule){
+    try{
+            $monPdo = connexionPDO();
+            $req = 'SELECT o.MED_DEPOTLEGAL, MED_NOMCOMMERCIAL FROM offrir o INNER JOIN medicament m ON m.med_depotlegal=o.med_depotlegal WHERE o.rap_num='.$rapport.' AND o.col_matricule='.$matricule.' ORDER BY MED_NOMCOMMERCIAL';
+            $res = $monPdo->query($req);
+            $result = $res->fetchAll();
+            return $result;
+        } 
+    catch (PDOException $e){
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
 }

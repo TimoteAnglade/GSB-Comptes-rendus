@@ -33,10 +33,10 @@
                             }
                             ?>
                         </select>
-                        <input class="btn btn-info text-light valider" type="submit" value="Afficher ce rapport">
+                        <input class="btn btn-info text-light valider" type="submit" value="Éditer ce rapport">
                     </form>
                 <?php } else { 
-                    echo '<p class="alert alert-primary text-center w-100">'.'ERREUR VIDE'.'</p>';
+                    echo '<p class="alert alert-primary text-center w-100">'.'Vous n\'avez aucun brouillons en cours'.'</p>';
                  } ?>
                  <form method="get">
                     <input type="text" name="uc" value="rapportdevisite" hidden>

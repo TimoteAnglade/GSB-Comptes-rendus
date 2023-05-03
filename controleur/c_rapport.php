@@ -239,7 +239,10 @@ switch ($action) {
 	case 'saisieRapport':
 	{
 		$isRapport = isset($_REQUEST['rapport']);
-		$isNew = isset($_REQUEST['new']);
+		if($isRapport){
+			$isRapport=!empty($_REQUEST['rapport']);
+		}
+		$isNew = !$isRapport||isset($_REQUEST['new']);
 		if($isRapport||$isNew){
 			$matricule = $_SESSION['matricule'];
 			$region = getRegionCollaborateur($matricule);
@@ -257,23 +260,24 @@ switch ($action) {
 			if($isNew){
 				$prerempli = array(
 					'matricule' => $matricule,
-					'rap_num' => NULL, 
-					'col_nom' => NULL, 
-					'col_prenom' => NULL, 
-					'pra_num_praticien' => NULL, 
-					'pra_nom' => NULL, 
-					'pra_prenom' => NULL, 
-					'pra_num_remplacant' => NULL, 
-					'pra_rem_nom' => NULL, 
-					'pra_rem_prenom' => NULL, 
-					'rap_date' => NULL, 
-					'rap_bilan' => NULL, 
-					'mot_code' => NULL, 
-					'rap_motif_autre' => NULL, 
-					'rap_definitif' => NULL, 
-					'med_depotlegal' => NULL, 
-					'med_depotlegal2' => NULL, 
+					'rap_num' => "", 
+					'col_nom' => "", 
+					'col_prenom' => "", 
+					'pra_num_praticien' => "", 
+					'pra_nom' => "", 
+					'pra_prenom' => "", 
+					'pra_num_remplacant' => "", 
+					'pra_rem_nom' => "", 
+					'pra_rem_prenom' => "", 
+					'rap_date' => "", 
+					'rap_bilan' => "", 
+					'mot_code' => "", 
+					'rap_motif_autre' => "", 
+					'rap_definitif' => "", 
+					'med_depotlegal' => "", 
+					'med_depotlegal2' => "", 
 				);
+				$echantillions=[];
 			}
 			var_dump($prerempli);
 			$motifs = getAllMotifs();
@@ -298,7 +302,8 @@ switch ($action) {
 		$echantillions=[];
 		if($_REQUEST['echantillions']=='on'){
 			for($i=1;$i<=10;) {
-				$echantillion[] = $_REQUEST['variable'+$i]
+				if(isset($_REQUEST['variable'+$i]))
+				$echantillion[] = $_REQUEST['variable'+$i];
 			}
 		}
 		$matricule = $_REQUEST['matricule'];

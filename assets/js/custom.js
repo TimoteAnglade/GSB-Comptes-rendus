@@ -48,7 +48,7 @@ function checkDateSaisieRapport() {
 	}
 }
 // FONCTION D'AJOUT ECHANTILLON
- function addEchantillon(ech) {
+ function addEchantillon(ech, med="") {
  	if (ech.checked) {
  		var i = 1;
  		$("#redigerEtEchantillon").after(

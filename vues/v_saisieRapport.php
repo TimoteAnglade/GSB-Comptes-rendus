@@ -1,7 +1,21 @@
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-5 pt-4">
-            <h1 class="titre text-center"><?php echo 'TITRE 1'; ?></h1>
+            <h1 class="titre text-center">
+        <?php
+            if($isNew){
+                echo 'Saisie d\'un nouveau rapport';   
+            }
+            else{
+                if(!isset($_REQUEST['rapport'])){
+                    $_REQUEST['rapport'] = 1;
+                }
+                echo 'Edition du rapport n°'.$_REQUEST['rapport'];   
+            }
+
+
+
+        ?></h1>
             <p class="text text-center">
                 <?php echo 'TITRE 2'; ?>
             </p>
@@ -78,7 +92,7 @@
                     <input type="textarea" name="bilanContent" class="form-control">
 
                     <label class="titre-formulaire mt-3" for="dateVis">Date de la visite</label>
-                    <input type="date" name="dateVis">
+                    <input type="date" name="dateVis" value="<?php echo substr($prerempli['rap_date'], 0, 10);?>">
 
                     <label for="medicamentproposer" id="labelMedoc" class="titre-formulaire mt-3">1er médicament présenté :</label>
                     <select id="medoc" name="medicamentproposer" id="medicamentproposer" class="form-select m-0" onchange="addMedicament(this)">
@@ -110,7 +124,7 @@
 
                     <label for="echantillions" class="titre-formulaire mt-3">Echantillions :</label>
                     <input type="checkbox" name="echantillions" id="redigerEtEchantillon" onchange="addEchantillon(this)">
-
+                    <script> addEchantillon({checked:true}); </script>
                     <label for="brouillon" class="titre-formulaire mt-3">Enregistrer ce rapport en tant que :</label>
                     <div>
                     <div class="form-check">
