@@ -252,6 +252,17 @@ switch ($action) {
 					$rapport=$_REQUEST['rapport'];
 					$prerempli = getContenuRapport($rapport, $matricule);
 					$prerempli['matricule'] = $matricule;
+					$echantillions = getEchantillions($rapport, $matricule);
+					$listeEch = "[";
+					$i=1;
+                    foreach($echantillions as $ech){
+                        $listeEch=$listeEch.'{'.'medCode:"'.$ech['MED_DEPOTLEGAL'].'", medNom:"'.$ech['MED_NOMCOMMERCIAL'].'", qte:"'.$ech['OFF_QTE'].'"},';
+                        $i++;
+                    }
+                    for($i; $i<=10; $i++){
+                    	$listeEch=$listeEch.'{medCode:"", medNom:"", qte:"1"}';
+                    }
+                        $listeEch=$listeEch."]";
 				}
 				else{
 					$isNew = 1;
@@ -277,9 +288,10 @@ switch ($action) {
 					'med_depotlegal' => "", 
 					'med_depotlegal2' => "", 
 				);
-				$echantillions=[];
+				$echantillions="[{},{},{},{},{},{},{},{},{},{},{},]";
 			}
 			var_dump($prerempli);
+			var_dump($echantillions);
 			$motifs = getAllMotifs();
 			$medocs = getAllNomMedicament();
 			include("vues/v_saisieRapport.php");

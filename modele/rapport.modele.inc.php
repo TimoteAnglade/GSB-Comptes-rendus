@@ -423,10 +423,11 @@ function ajoutOuModif($vraimatricule, $matricule_redac, $rapport, $praticien, $p
     $res = $res->fetch();
     var_dump($res);
 }
+
 function getEchantillions($rapport, $matricule){
     try{
             $monPdo = connexionPDO();
-            $req = 'SELECT o.MED_DEPOTLEGAL, MED_NOMCOMMERCIAL FROM offrir o INNER JOIN medicament m ON m.med_depotlegal=o.med_depotlegal WHERE o.rap_num='.$rapport.' AND o.col_matricule='.$matricule.' ORDER BY MED_NOMCOMMERCIAL';
+            $req = 'SELECT o.MED_DEPOTLEGAL, m.MED_NOMCOMMERCIAL, o.OFF_QTE FROM offrir o INNER JOIN medicament m ON m.med_depotlegal=o.med_depotlegal WHERE o.rap_num='.$rapport.' AND o.col_matricule="'.$matricule.'" ORDER BY MED_NOMCOMMERCIAL';
             $res = $monPdo->query($req);
             $result = $res->fetchAll();
             return $result;

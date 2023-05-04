@@ -1,3 +1,10 @@
+<?php 
+                    var_dump($medocs[13]['MED_DEPOTLEGAL']);
+                    var_dump($prerempli['med_depotlegal']);
+
+                    var_dump($medocs[13]['MED_DEPOTLEGAL']==$prerempli['med_depotlegal']);
+                    ?>
+
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-5 pt-4">
@@ -89,7 +96,7 @@
                     </select>
 
                     <label class="titre-formulaire mt-3" for="bilanContent">Bilan du rapport</label>
-                    <input type="textarea" name="bilanContent" class="form-control">
+                    <input type="textarea" name="bilanContent" class="form-control" value=<?php echo '"'.$prerempli['rap_bilan'].'"'?>>
 
                     <label class="titre-formulaire mt-3" for="dateVis">Date de la visite</label>
                     <input type="date" name="dateVis" value="<?php echo substr($prerempli['rap_date'], 0, 10);?>">
@@ -97,21 +104,32 @@
                     <label for="medicamentproposer" id="labelMedoc" class="titre-formulaire mt-3">1er médicament présenté :</label>
                     <select id="medoc" name="medicamentproposer" id="medicamentproposer" class="form-select m-0" onchange="addMedicament(this)">
                     <option class="" value="default">- Choisissez un médicament -</option>
+                    
 
                     <?php
+                    $plusDeMedoc=false;
                     foreach ($medocs as $medoc) {
-                        echo '<option class="listemedoc" value="'.$medoc['MED_DEPOTLEGAL'].'"> '.$medoc['MED_DEPOTLEGAL']." - ".$medoc['MED_NOMCOMMERCIAL']." </option>";
+                        echo '<option class="listemedoc" value="'.$medoc['MED_DEPOTLEGAL'].'"';
+                        if($medoc['MED_DEPOTLEGAL']==$prerempli['med_depotlegal']){
+                            echo ' selected';
+                            $plusDeMedoc=true;
+                        }
+                        echo '> '.$medoc['MED_DEPOTLEGAL']." - ".$medoc['MED_NOMCOMMERCIAL']." </option>";
                     }
                     ?>
                     </select>
-
+                    <?php 
+                    if($plusDeMedoc){
+                        echo '<script> document=new Document(); addMedicament(document.getElementById("medoc"), "'.$prerempli['med_depotlegal2'].'"); </script>';
+                    }
+                    ?>
                     <label for="motifautre" class="titre-formulaire mt-3">Motif :</label>
                     <select id="motifautre" name="motifautre" id="medicamentproposer" class="form-select m-0" onchange="addMotifAutre(this)">
                     <option class="" value="default">- Choisissez un motif -</option>
 
                     <?php
                     foreach ($motifs as $motif) {
-                        echo '<option class="listemedoc" value="'.$motif['MOT_CODE'].'"> '.$motif['MOT_CODE'];
+                        echo '<option class="listemot" value="'.$motif['MOT_CODE'].'"> '.$motif['MOT_CODE'];
                         if(!empty($motif['MOT_LIBELLE'])){
                             echo " - ".$motif['MOT_LIBELLE'];
                         }
@@ -123,8 +141,10 @@
                     </div>
 
                     <label for="echantillions" class="titre-formulaire mt-3">Echantillions :</label>
-                    <input type="checkbox" name="echantillions" id="redigerEtEchantillon" onchange="addEchantillon(this)">
-                    <script> addEchantillon({checked:true}); </script>
+
+
+                    <input type="checkbox" name="echantillions" id="redigerEtEchantillon"
+                    onchange=<?php echo '\'addEchantillon(this,"EQUILARX6","DOLRIL7", "'.$listeEch.'")" \''; ?>>
                     <label for="brouillon" class="titre-formulaire mt-3">Enregistrer ce rapport en tant que :</label>
                     <div>
                     <div class="form-check">

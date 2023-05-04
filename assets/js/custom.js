@@ -8,25 +8,24 @@ function addMotifAutre(mot) {
 		$("#motif-autre").remove();
 	}
 }
-function addMedicament(med) {
+function addMedicament(med, prerempli="") {
 	if ($(med).val() != "default") {
-		if(true){
-			$("#medoc-autre").remove();
-			$("#medicamentproposer2").remove();
-			$("#medoc").after(
-				$('<select id="medicamentproposer2" name="medicamentproposer2" id="medicamentproposer2" class="form-select m-0">').append(
-					'<option value="default">- Choisissez un médicament -</option>'
-				)
-			);
-			$("#medoc").after(
-				$('<div class="d-flex flex-column" id="medoc-autre">').append(
-					$('<label for="medicamentproposer2" id="labelMedoc" class="titre-formulaire mt-3">2ème médicament présenté :</label>')
-				)
-			);
-			$(".listemedoc").clone().appendTo("#medicamentproposer2");
-			var val = $(med).val();
-			$("#medicamentproposer2>.listemedoc[value='" + val + "']").remove();
-		}
+		$("#medoc-autre").remove();
+		$("#medicamentproposer2").remove();
+		$("#medoc").after(
+			$('<select id="medicamentproposer2" name="medicamentproposer2" id="medicamentproposer2" class="form-select m-0">').append(
+				'<option value="default">- Choisissez un médicament -</option>'
+			)
+		);
+		$("#medoc").after(
+			$('<div class="d-flex flex-column" id="medoc-autre">').append(
+				$('<label for="medicamentproposer2" id="labelMedoc" class="titre-formulaire mt-3">2ème médicament présenté :</label>')
+			)
+		);
+		$(".listemedoc").clone().appendTo("#medicamentproposer2");
+		var val = $(med).val();
+		$("#medicamentproposer2>.listemedoc[value='" + val + "']").remove();
+		$("#medicamentproposer2>.listemedoc[value='" + prerempli + "']").attr("selected",true);
 	} else {
 		$("#medoc-autre").remove();
 		$("#medicamentproposer2").remove();
@@ -48,7 +47,7 @@ function checkDateSaisieRapport() {
 	}
 }
 // FONCTION D'AJOUT ECHANTILLON
- function addEchantillon(ech, med="") {
+ function addEchantillon(ech, prerempli1="", prerempli2="", listeEch="") {
  	if (ech.checked) {
  		var i = 1;
  		$("#redigerEtEchantillon").after(
@@ -58,7 +57,7 @@ function checkDateSaisieRapport() {
  				i +
  				'" type="number"><button type="button" id="button" value="' +
  				i +
- 				'" onclick="addOtherEchantillon();" class="btn btn-outline-secondary"><i class="bi bi-plus-lg"></i></button></div></div>'
+ 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+listeEch+');" class="btn btn-outline-secondary"><i class="bi bi-plus-lg"></i></button></div></div>'
  		);
  		$("#Echantillon" + i + "").prepend(
  			$(
@@ -67,7 +66,9 @@ function checkDateSaisieRapport() {
  		);
  		$(".listemedoc")
  			.clone()
- 			.appendTo("#echantillonadd" + i + "");
+ 			.appendTo("#echantillonadd" + i + "");	
+		$("#echantillonadd"+i+">.listemedoc[value='"+prerempli1+"']").removeAttr("selected");
+		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli2 + "']").removeAttr("selected");
  		$("#echantillonadd" + i + "").focus();
  	} else {
  		if (confirm("Voulez-vous vraiment décocher Échantillon ?")) {
@@ -78,7 +79,7 @@ function checkDateSaisieRapport() {
  	}
  }
 
- function addOtherEchantillon() {
+ function addOtherEchantillon(prerempli1="", prerempli2="", listeEch) {
  	if (parseInt($("#button").val()) < 9) {
  		var i = parseInt($("#button").val()) + 1;
  		$("#button").remove();
@@ -90,7 +91,7 @@ function checkDateSaisieRapport() {
  				i +
  				'" type="number"><button type="button" id="button" value="' +
  				i +
- 				'" onclick="addOtherEchantillon();" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button><button type="button" id="buttonMinus" value="' +
+ 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+listeEch+');" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button><button type="button" id="buttonMinus" value="' +
  				i +
  				'" onclick="minusEchantillon(this);" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button></div></div>'
  		);
@@ -102,6 +103,10 @@ function checkDateSaisieRapport() {
  		$(".listemedoc")
  			.clone()
  			.appendTo("#echantillonadd" + i + "");
+		$("#echantillonadd"+i+">.listemedoc[value='"+prerempli1+"']").removeAttr("selected");
+		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli2 + "']").removeAttr("selected");
+		$("#medicamentproposer2>.listemedoc[value='" + listeEch[i].medCode + "']").attr("selected",true);
+		$("#nbEchantillon").attr("value", listeEch[i].qte);
  		$("#echantillonadd" + i + "").focus();
  	} else {
  		var i = parseInt($("#button").val()) + 1;
