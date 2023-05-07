@@ -20,7 +20,7 @@ function getContenuRapport($id, $matricule)
         rap_bilan, 
         mot_code, 
         rap_motif_autre, 
-        rap_definitif, 
+        rap_brouillon, 
         med_depotlegal, 
         med_depotlegal2 
         FROM rapport_visite r 
@@ -53,7 +53,7 @@ function getContenuRapportLight($id, $matricule)
         m1.med_nomcommercial as med_nomcommercial1,
         med_depotlegal2,
         m2.med_nomcommercial as med_nomcommercial2,
-        rap_definitif, 
+        rap_brouillon, 
         FROM rapport_visite r 
         INNER JOIN collaborateur c ON r.col_matricule=c.col_matricule 
         INNER JOIN praticien p1 ON r.pra_num_praticien=p1.pra_num 
@@ -114,7 +114,7 @@ function getRapportsRegion($matricule) {
         SELECT col_matricule FROM travailler t WHERE reg_code=(
         SELECT reg_code FROM travailler WHERE col_matricule="'.$matricule.'" and tra_role="Délégué"
         ) AND tra_role="Visiteur"
-        ) AND RAP_DEFINITIF=1;';
+        ) AND rap_brouillon=1;';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
 
@@ -187,7 +187,7 @@ function estBrouillon($id, $matricule)
 {
     try {
         $monPdo = connexionPDO();
-        $req = 'SELECT rap_definitif
+        $req = 'SELECT rap_brouillon
                 FROM rapport_visite
                 WHERE rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
         $res = $monPdo->query($req);
@@ -210,9 +210,9 @@ function getOffresRapport($id, $matricule)
         $monPdo = connexionPDO();
         $req = 'SELECT med_nomcommercial, off_qte
                 FROM rapport_visite r
-                INNER JOIN offrir o ON o.RAP_NUM=r.RAP_NUM
+                INNER JOIN offrir o ON o.RAP_NUM=r.RAP_NUM AND o.col_matricule=r.col_matricule
                 INNER JOIN medicament m ON m.MED_DEPOTLEGAL=o.MED_DEPOTLEGAL
-                WHERE r.rap_num="'.$id.'" and col_matricule="'.$matricule.'";';
+                WHERE r.rap_num="'.$id.'" and r.col_matricule="'.$matricule.'";';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
         return $result;
@@ -373,7 +373,7 @@ function getInfoCollaborateurParDelegue($matricule)
         SELECT col_matricule FROM travailler t WHERE reg_code=(
         SELECT reg_code FROM travailler WHERE col_matricule="'.$matricule.'" and tra_role="Délégué"
         ) AND tra_role="Visiteur"
-        ) AND RAP_DEFINITIF=1;';
+        ) AND rap_brouillon=1;';
         $res = $monPdo->query($req);
         $result = $res->fetchAll(PDO::FETCH_ASSOC);
         return $result;
@@ -410,18 +410,178 @@ function getAllMotifs()
         }
 }
 
-function ajoutOuModif($vraimatricule, $matricule_redac, $rapport, $praticien, $praticienremp, $bilan, $dateVis, $medicament1, $medicament2, $motif, $motifautre, $echantillon, $brouillon)
+function ajoutOuModif($donnees)
 {
-    $canEdit=true;
-    $canEdit=$canEdit&&$matricule==$vraimatricule;
+    $canEdit=!empty($donnees['matricule'])&&!empty($donnees['rapport'])&&!empty($donnees['praticien'])&&!empty($donnees['bilanContent'])&&!empty($donnees['motif'])&&(!empty($donnees['brouillon'])||$donnees['brouillon']=='0')&&!empty($donnees['dateVis']);
+    $vraimatricule=$_SESSION['matricule'];
+    $canEdit=$canEdit&&$donnees['matricule']==$vraimatricule;
 
     //vérification de si le rapport existe et est éditable
+    $publiable="";
+    try{
     $monPdo = connexionPDO();
-    $req="SELECT count(rap_num) FROM rapport_visite WHERE col_matricule=:mat AND rap_num=:rap AND rap_definitif=0";
+    $req="SELECT count(rap_num) as 'publiable' FROM rapport_visite WHERE col_matricule=:mat AND rap_num=:rap AND rap_brouillon=1";
     $req = $monPdo->prepare($req);
-    $res = $req->execute(array('mat'=>$vraimatricule, 'rap'=>$rapport));
-    $res = $res->fetch();
-    var_dump($res);
+    $req->execute(array('mat'=>$vraimatricule, 'rap'=>$donnees['rapport']));
+    $publiable = $req->fetch(PDO::FETCH_ASSOC)['publiable'];
+    }catch (PDOException $e) {
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+    $canEdit=$canEdit&&($publiable||$donnees['isNew']);
+
+
+    $isNew = true;
+
+    $req="SELECT (count(rap_num)=0) as 'isThere' FROM rapport_visite WHERE col_matricule=:mat AND rap_num=:rap";
+    $req = $monPdo->prepare($req);
+    $req->execute(array('mat'=>$vraimatricule, 'rap'=>$donnees['rapport']));
+    $isNew = $req->fetch(PDO::FETCH_ASSOC)['isThere'];
+    if($canEdit){
+        if($isNew){
+            $preparation = [
+            'mat'=>$donnees['matricule'],
+            'rap' => $donnees['rapport'],
+            'praPra' => $donnees['praticien'],
+            'dat' => date('Y-m-d'),
+            'datvis' => $donnees['dateVis'],
+            'bil' => $donnees['bilanContent'],
+            'mot' => $donnees['motif'],
+            'brou' => $donnees['brouillon']];
+
+            $req = "INSERT INTO rapport_visite (COL_MATRICULE, RAP_NUM, PRA_NUM_PRATICIEN, PRA_NUM_REMPLACANT, RAP_DATE, RAP_DATE_VIS, RAP_BILAN, MOT_CODE, RAP_MOTIF_AUTRE, rap_brouillon, MED_DEPOTLEGAL, MED_DEPOTLEGAL2) VALUES (:mat, :rap, :praPra, ";
+            if(empty($donnees['praticienremp'])){
+                $req = $req."NULL, ";
+            }
+            else{
+                $req = $req.':praremp'.", ";
+                $preparation['praremp']=$donnees['praticienremp'];
+            }
+            $req = $req.":dat, :datvis, :bil, :mot, ";
+            if($donnees['motif']!="Autre"){
+                $req = $req."NULL, ";
+            }
+            else{
+                $req = $req.':motaut'.", ";
+                $preparation['motaut']=$donnees['motifautre'];
+            }
+            $req = $req.":brou, ";
+            if(empty($donnees['medicamentproposer'])){
+                $req = $req."NULL, ";
+            }
+            else{
+                $req = $req.':medpro1'.', ';
+                $preparation['medpro1']=$donnees['medicamentproposer'];
+            }
+            if(empty($donnees['medicamentproposer2'])){
+                $req = $req."NULL";
+            }
+            else{
+                $req = $req.':medpro2';
+                $preparation['medpro2']=$donnees['medicamentproposer2'];
+            }
+            $req = $req.");";
+            $req = $monPdo->prepare($req);
+            $req->execute($preparation);
+
+            foreach($donnees['echantillions'] as $ech){
+                $qte = getValeurEch($donnees['matricule'], $donnees['rapport'], $ech[0]);
+                if($qte){
+                    $req = "UPDATE offrir SET OFF_QTE=OFF_QTE+:qte WHERE COL_MATRICULE=:mat AND RAP_NUM=:rap AND MED_DEPOTLEGAL=:med";
+                    $reqprep = $monPdo->prepare($req);
+                    $res = $reqprep->execute(['rap'=>$donnees['rapport'], 'mat'=>$donnees['matricule'], 'med'=>$ech[0], 'qte'=>$ech[1]]);
+                }
+                else{
+                    $req="INSERT INTO offrir (RAP_NUM, COL_MATRICULE, MED_DEPOTLEGAL, OFF_QTE) VALUES (:rap, :mat, :med, :qte)";
+                    $reqprep = $monPdo->prepare($req);
+                    $res = $reqprep->execute(['rap'=>$donnees['rapport'], 'mat'=>$donnees['matricule'], 'med'=>$ech[0], 'qte'=>$ech[1]]);
+                }
+            }
+
+
+        }
+        else{           //Update si c'est pas new
+            $preparation = [
+            'mat'=>$donnees['matricule'],
+            'rap' => $donnees['rapport'],
+            'praPra' => $donnees['praticien'],
+            'dat' => date('Y-m-d'),
+            'datVis' => $donnees['dateVis'],
+            'bil' => $donnees['bilanContent'],
+            'mot' => $donnees['motif'],
+            'brou' => $donnees['brouillon']];
+
+
+            $req = "UPDATE rapport_visite SET PRA_NUM_PRATICIEN=:praPra,";
+
+             
+            if(empty($donnees['praticienremp'])){
+            }
+            else{
+                $req = $req.'PRA_NUM_REMPLACANT=:praremp, ';
+                $preparation['praremp']=$donnees['praticienremp'];
+            }
+
+            $req = $req."RAP_DATE=:dat, RAP_DATE_VIS=:datVis, RAP_BILAN=:bil, MOT_CODE=:mot, ";
+
+
+            if($donnees['motif']!="Autre"){
+            }
+            else{
+                $req = $req.'RAP_MOTIF_AUTRE=:motAut, ';
+                $preparation['motAut']=$donnees['motifautre'];
+            }
+
+            $req = $req."RAP_BROUILLON=:brou";
+
+            if(empty($donnees['medicamentproposer'])){
+            }
+            else{
+                $req = $req.', MED_DEPOTLEGAL=:med1';
+                $preparation['med1']=$donnees['medicamentproposer'];
+            }
+
+
+            if(empty($donnees['medicamentproposer2'])){
+            }
+            else{
+                $req = $req.', MED_DEPOTLEGAL2=:med2 ';
+                $preparation['med2']=$donnees['medicamentproposer2'];
+            }
+
+            $req = $req."WHERE COL_MATRICULE=:mat AND RAP_NUM=:rap;";
+
+            $req = $monPdo->prepare($req);
+            $req->execute($preparation);
+
+
+
+
+            $req = "DELETE FROM offrir WHERE COL_MATRICULE=:mat AND RAP_NUM=:rap";
+            $reqprep = $monPdo->prepare($req);
+            $res = $reqprep->execute(['rap'=>$donnees['rapport'], 'mat'=>$donnees['matricule']]);
+            foreach($donnees['echantillions'] as $ech){
+                $qte = getValeurEch($donnees['matricule'], $donnees['rapport'], $ech[0]);
+                if($qte){
+
+                    $req = "UPDATE offrir SET OFF_QTE=OFF_QTE+:qte WHERE COL_MATRICULE=:mat AND RAP_NUM=:rap AND MED_DEPOTLEGAL=:med";
+                    $reqprep = $monPdo->prepare($req);
+                    $res = $reqprep->execute(['rap'=>$donnees['rapport'], 'mat'=>$donnees['matricule'], 'med'=>$ech[0], 'qte'=>$ech[1]]);
+                }
+                else{
+                    $req="INSERT INTO offrir (RAP_NUM, COL_MATRICULE, MED_DEPOTLEGAL, OFF_QTE) VALUES (:rap, :mat, :med, :qte)";
+                    $reqprep = $monPdo->prepare($req);
+                    $res = $reqprep->execute(['rap'=>$donnees['rapport'], 'mat'=>$donnees['matricule'], 'med'=>$ech[0], 'qte'=>$ech[1]]);
+                }
+            }
+        }
+        return true;   
+    }
+    else{
+        return false;
+    }
+
+
 }
 
 function getEchantillions($rapport, $matricule){
@@ -433,6 +593,36 @@ function getEchantillions($rapport, $matricule){
             return $result;
         } 
     catch (PDOException $e){
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getNouveauRapNum(){
+    try{
+            $matricule=$_SESSION['matricule'];
+            $monPdo = connexionPDO();
+            $req = 'SELECT (max(RAP_NUM)+1) as "code" FROM rapport_visite WHERE COL_MATRICULE="'.$matricule.'";';
+            $res = $monPdo->query($req);
+            $result = $res->fetch()['code'];
+            return $result;
+    }
+    catch (PDOException $e){
+        print "Erreur !: " . $e->getMessage();
+        die();
+    }
+}
+
+function getValeurEch($mat, $rap, $med){
+
+    try {
+        $monPdo = connexionPDO();
+        $req="SELECT IFNULL(SUM(OFF_QTE),0) as 'qte' FROM `offrir` WHERE COL_MATRICULE=:mat AND RAP_NUM=:rap AND MED_DEPOTLEGAL=:med;";
+        $req = $monPdo->prepare($req);
+        $res = $req->execute(['mat' => $mat, 'rap' => $rap, 'med' => $med, ]);
+        $result = $req->fetch()[0];
+        return $result;
+    } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
     }

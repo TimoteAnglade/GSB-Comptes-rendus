@@ -253,14 +253,14 @@ switch ($action) {
 					$prerempli = getContenuRapport($rapport, $matricule);
 					$prerempli['matricule'] = $matricule;
 					$echantillions = getEchantillions($rapport, $matricule);
-					$listeEch = "[";
+					$listeEch = "[{},";
 					$i=1;
                     foreach($echantillions as $ech){
                         $listeEch=$listeEch.'{'.'medCode:"'.$ech['MED_DEPOTLEGAL'].'", medNom:"'.$ech['MED_NOMCOMMERCIAL'].'", qte:"'.$ech['OFF_QTE'].'"},';
                         $i++;
                     }
                     for($i; $i<=10; $i++){
-                    	$listeEch=$listeEch.'{medCode:"", medNom:"", qte:"1"}';
+                    	$listeEch=$listeEch.'{medCode:"", medNom:"", qte:"1"},';
                     }
                         $listeEch=$listeEch."]";
 				}
@@ -288,10 +288,9 @@ switch ($action) {
 					'med_depotlegal' => "", 
 					'med_depotlegal2' => "", 
 				);
-				$echantillions="[{},{},{},{},{},{},{},{},{},{},{},]";
+				$echantillions= [];
+				$listeEch='[{},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},{medCode:"", medNom:"", qte:"1"},]';
 			}
-			var_dump($prerempli);
-			var_dump($echantillions);
 			$motifs = getAllMotifs();
 			$medocs = getAllNomMedicament();
 			include("vues/v_saisieRapport.php");
@@ -303,27 +302,155 @@ switch ($action) {
 	}
 	case "confirmerRapport" :
 	{
-		$matricule = $_REQUEST['matricule'];
-		$rapport = $_REQUEST['rapport'];
-		$praticien = $_REQUEST['praticien'];
-		$praticienremp = $_REQUEST['praticienremp'];
-		$bilanContent = $_REQUEST['bilanContent'];
-		$medicamentproposer = $_REQUEST['medicamentproposer'];
-		$medicamentproposer2 = $_REQUEST['medicamentproposer2'];
-		$motifautre = $_REQUEST['motif-autre'];
-		$echantillions=[];
-		if($_REQUEST['echantillions']=='on'){
-			for($i=1;$i<=10;) {
-				if(isset($_REQUEST['variable'+$i]))
-				$echantillion[] = $_REQUEST['variable'+$i];
+		if(isset($_REQUEST['matricule'])){
+			if($_REQUEST['matricule']!="default"){
+				$matricule = $_REQUEST['matricule'];	
+			}
+			else{
+				$matricule = "";
 			}
 		}
-		$matricule = $_REQUEST['matricule'];
-		$matricule = $_REQUEST['matricule'];
-		$matricule = $_REQUEST['matricule'];
-		$matricule = $_REQUEST['matricule'];
-		$matricule = $_REQUEST['matricule'];
-		//ajoutOuModif();
+		else{
+			$matricule = "";
+		}
+
+		$isNew=false;
+		if(isset($_REQUEST['rapport'])){
+			if(empty($_REQUEST['rapport'])){
+				$rapport = getNouveauRapNum();
+				$isNew=true;
+			}
+			else{
+				$rapport = $_REQUEST['rapport'];
+			}
+		}
+		else{
+			$rapport = getNouveauRapNum();
+			$isNew=false;
+		}
+		
+		if(isset($_REQUEST['praticien'])){
+			if($_REQUEST['praticien']!="default"){
+				$praticien = $_REQUEST['praticien'];	
+			}
+			else{
+				$praticien = "";
+			}
+		}
+		else{
+			$praticien = "";
+		}
+		
+		if(isset($_REQUEST['praticienremp'])&&!($_REQUEST['praticienremp']=="default")){
+			$praticienremp = $_REQUEST['praticienremp'];
+			if($praticienremp!="default"){
+				$praticienremp = $_REQUEST['praticienremp'];	
+			}
+			else{
+				$praticienremp = "";
+			}
+		}
+		else{
+			$praticienremp = "";
+		}
+		
+		if(isset($_REQUEST['bilanContent'])){
+			$bilanContent = $_REQUEST['bilanContent'];
+		}
+		else{
+			$bilanContent = "";
+		}
+		
+		if(isset($_REQUEST['medicamentproposer'])){
+			if($_REQUEST['medicamentproposer']!="default"){
+				$medicamentproposer = $_REQUEST['medicamentproposer'];	
+			}
+			else{
+				$medicamentproposer = "";
+			}
+		}
+		else{
+			$medicamentproposer = "";
+		}
+		
+		if(isset($_REQUEST['medicamentproposer2'])){
+			$medicamentproposer2 = $_REQUEST['medicamentproposer2'];
+		}
+		else{
+			$medicamentproposer2 = "";
+		}
+		
+		if(isset($_REQUEST['motif'])){
+			if($_REQUEST['matricule']!="default"){
+				$motif = $_REQUEST['motif'];	
+			}
+			else{
+				$motif = "";
+			}
+		}
+		else{
+			$motif = "";
+		}
+		
+		if(isset($_REQUEST['motif-autre'])){
+			$motifautre = $_REQUEST['motif-autre'];
+		}
+		else{
+			$motifautre = "";
+		}
+		
+		if(isset($_REQUEST['dateVis'])){
+			$dateVis = $_REQUEST['dateVis'];
+		}
+		else{
+			$dateVis = "";
+		}
+		
+		if(isset($_REQUEST['brouillon'])){
+			$brouillon = $_REQUEST['brouillon'];
+		}
+		else{
+			$brouillon = 1;
+		}
+
+		
+		if(isset($_REQUEST['echantillions'])){
+			$boolEchantillion = $_REQUEST['echantillions'];
+		}
+		else{
+			$boolEchantillion = 'off';
+		}
+
+		$echantillions=[];
+		if($boolEchantillion=='on'){
+			for($i=1;$i<=10;$i++) {
+				if(isset($_REQUEST['echantillonadd'.$i])){
+					$echantillions[] = [$_REQUEST['echantillonadd'.$i], $_REQUEST['number'.$i]];
+				}
+			}
+		}
+		$donnees=[
+			'matricule' => $matricule,
+			'rapport' => $rapport,
+			'praticien' => $praticien,
+			'praticienremp' => $praticienremp,
+			'bilanContent' => $bilanContent,
+			'medicamentproposer' => $medicamentproposer,
+			'medicamentproposer2' => $medicamentproposer2,
+			'motif' => $motif,
+			'motifautre' => $motifautre,
+			'dateVis' => $dateVis,
+			'brouillon' => $brouillon,
+			'echantillions' => $echantillions,
+			'isNew' => $isNew,
+		];
+		if(ajoutOuModif($donnees)){			
+			header('Location: ?uc=rapportdevisite&action=voirRapport&rapport='.$donnees['rapport']);
+		}
+		else{
+			echo '<script>history.go("-1");</script>';
+		}
+		break;
 	}
 	default :
 	{

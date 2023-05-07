@@ -29,7 +29,7 @@
                                     echo '<option value="' . $key[0];
                                     if(isset($key[7])){ echo '§'.$key[7];}
                                     echo '" class="form-control"';    
-                                    if(!$key[6]){echo 'style="font-style: italic; color: purple"';}
+                                    if($key[6]){echo 'style="font-style: italic; color: purple"';}
                                     echo '> Rapport n°' . $key[0] . ' : ' . $key[1] . ' | ' . $key[2] . ' | ' . $key[3] . ' | ' . $key[4] . $key[5] . '</option>';
                                 }
                             }

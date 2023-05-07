@@ -1,9 +1,10 @@
-function addMotifAutre(mot) {
+function addMotifAutre(mot, prerempli="") {
 	if ($(mot).val() == "Autre") {
-		$("#motifautre").after(
+		$("#motif").after(
 			'<textarea required name="motif-autre" id="motif-autre" placeholder="Veuillez saisir le motif autre" class="form-control m-0 mt-2"></textarea>'
 		);
-		$("#motif-autre").focus();
+		document = new Document;
+		document.getElementById("motif-autre").innerHTML=prerempli;
 	} else {
 		$("#motif-autre").remove();
 	}
@@ -40,7 +41,6 @@ function checkDateSaisieRapport() {
 			.after(
 				'<div class="text-danger small" id="errorDate">La date de visite doit être inférieure à la date de saisie</div>'
 			);
-		$("#datevisite").focus();
 		return false;
 	} else {
 		return true;
@@ -50,26 +50,28 @@ function checkDateSaisieRapport() {
  function addEchantillon(ech, prerempli1="", prerempli2="", listeEch="") {
  	if (ech.checked) {
  		var i = 1;
+ 		obj = JSON.stringify(listeEch);
  		$("#redigerEtEchantillon").after(
  			'<div class="col-10 d-flex flex-column justify-content-center align-items-center mt-3 mb-5 mx-auto" id="addechantillon"><div id="Echantillon' +
  				i +
  				'" class=" mb-1 d-flex flex-row"><input required min="1" value="1" class="form-control me-1 rounded w-25 text-center" id="nbEchantillon' +
  				i +
- 				'" type="number"><button type="button" id="button" value="' +
+ 				'" type="number" name="number' + i + '"><button type="button" id="button" value=' +
  				i +
- 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+listeEch+');" class="btn btn-outline-secondary"><i class="bi bi-plus-lg"></i></button></div></div>'
+ 				' onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary"><i class="bi bi-plus-lg"></i></button></div></div>'
  		);
  		$("#Echantillon" + i + "").prepend(
  			$(
  				'<select name="echantillonadd' + i + '" id="echantillonadd' + i + '" class="form-select m-0 me-1" required>'
  			).append('<option value="">- Choisissez un échantillon -</option>')
  		);
- 		$(".listemedoc")
+ 		$("#medoc>.listemedoc")
  			.clone()
  			.appendTo("#echantillonadd" + i + "");	
 		$("#echantillonadd"+i+">.listemedoc[value='"+prerempli1+"']").removeAttr("selected");
 		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli2 + "']").removeAttr("selected");
- 		$("#echantillonadd" + i + "").focus();
+		$("#echantillonadd"+i+">.listemedoc[value='" + listeEch[i]["medCode"] + "']").attr("selected",true);
+		$("#nbEchantillon"+i).attr("value",listeEch[i]["qte"]);
  	} else {
  		if (confirm("Voulez-vous vraiment décocher Échantillon ?")) {
  			$("#addechantillon").remove();
@@ -79,9 +81,10 @@ function checkDateSaisieRapport() {
  	}
  }
 
- function addOtherEchantillon(prerempli1="", prerempli2="", listeEch) {
+ function addOtherEchantillon(prerempli1="", prerempli2="", listeEch="") {
  	if (parseInt($("#button").val()) < 9) {
  		var i = parseInt($("#button").val()) + 1;
+ 		obj = JSON.stringify(listeEch);
  		$("#button").remove();
  		$("#buttonMinus").remove();
  		$("#addechantillon").append(
@@ -89,27 +92,27 @@ function checkDateSaisieRapport() {
  				i +
  				'" class=" mb-1 d-flex flex-row"><input required min="1" value="1" class="form-control me-1 rounded w-25 text-center" id="nbEchantillon' +
  				i +
- 				'" type="number"><button type="button" id="button" value="' +
+ 				'" type="number" name="number' + i + '"><button type="button" id="button" value="' +
  				i +
- 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+listeEch+');" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button><button type="button" id="buttonMinus" value="' +
+ 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button><button type="button" id="buttonMinus" value="' +
  				i +
- 				'" onclick="minusEchantillon(this);" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button></div></div>'
+ 				'" onclick="minusEchantillon(this, \''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button></div></div>'
  		);
  		$("#Echantillon" + i + "").prepend(
  			$(
  				'<select name="echantillonadd' + i + '" id="echantillonadd' + i + '" class="form-select m-0 me-1" required>'
  			).append('<option value="">- Choisissez un échantillon -</option>')
  		);
- 		$(".listemedoc")
+ 		$("#medoc>.listemedoc")
  			.clone()
  			.appendTo("#echantillonadd" + i + "");
-		$("#echantillonadd"+i+">.listemedoc[value='"+prerempli1+"']").removeAttr("selected");
+		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli1 + "']").removeAttr("selected");
 		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli2 + "']").removeAttr("selected");
-		$("#medicamentproposer2>.listemedoc[value='" + listeEch[i].medCode + "']").attr("selected",true);
-		$("#nbEchantillon").attr("value", listeEch[i].qte);
- 		$("#echantillonadd" + i + "").focus();
+		$("#echantillonadd"+i+">.listemedoc[value='" + listeEch[i]["medCode"] + "']").attr("selected",true);
+		$("#nbEchantillon"+i).attr("value", listeEch[i].qte);
  	} else {
  		var i = parseInt($("#button").val()) + 1;
+ 		obj = JSON.stringify(listeEch);
  		$("#button").remove();
  		$("#buttonMinus").remove();
  		$("#addechantillon").append(
@@ -117,38 +120,42 @@ function checkDateSaisieRapport() {
  				i +
  				'" class=" mb-1 d-flex flex-row"><input required min="1" value="1" class="form-control me-1 rounded w-25 text-center" id="nbEchantillon' +
  				i +
- 				'" type="number"><button type="button" id="buttonMinus" value="' +
+ 				'" type="number" name="number' + i + '"><button type="button" id="buttonMinus" value="' +
  				i +
- 				'" onclick="minusEchantillon(this);" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button></div></div>'
+ 				'" onclick="minusEchantillon(this, \''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button></div></div>'
  		);
  		$("#Echantillon" + i + "").prepend(
  			$(
  				'<select name="echantillonadd' + i + '" id="echantillonadd' + i + '" class="form-select m-0 me-1" required>'
  			).append('<option value="">- Choisissez un échantillon -</option>')
  		);
- 		$(".listemedoc")
+ 		$("#medoc>.listemedoc")
  			.clone()
  			.appendTo("#echantillonadd" + i + "");
- 		$("#echantillonadd" + i + "").focus();
+		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli1 + "']").removeAttr("selected");
+		$("#echantillonadd"+i+">.listemedoc[value='" + prerempli2 + "']").removeAttr("selected");
+		$("#echantillonadd"+i+">.listemedoc[value='" + listeEch[i]["medCode"] + "']").attr("selected",true);
+		$("#nbEchantillon").attr("value", listeEch[i].qte);
  	}
  }
 
- function minusEchantillon(min) {
+ function minusEchantillon(min, prerempli1="", prerempli2="", listeEch="") {
  	var i = parseInt($("#buttonMinus").val()) - 1;
+ 	obj = JSON.stringify(listeEch);
  	$(min).parent().remove();
  	if (i > 1) {
  		$("#Echantillon" + i + "").append(
  			'<button type="button" id="button" value="' +
  				i +
- 				'" onclick="addOtherEchantillon();" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button><button type="button" id="buttonMinus" value="' +
+ 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button><button type="button" id="buttonMinus" value="' +
  				i +
- 				'" onclick="minusEchantillon(this);" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button>'
- 		);
+ 				'" onclick="minusEchantillon(this, \''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary"><i class="bi bi-dash-lg"></i></button>'
+ 				);
  	} else {
  		$("#Echantillon" + i + "").append(
  			'<button type="button" id="button" value="' +
  				i +
- 				'" onclick="addOtherEchantillon();" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button>'
+ 				'" onclick="addOtherEchantillon(\''+prerempli1+'\', \''+prerempli2+'\', '+obj.replace(/\"/g, "&#39;")+');" class="btn btn-outline-secondary me-1"><i class="bi bi-plus-lg"></i></button>'
  		);
  	}
  }
