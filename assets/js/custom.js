@@ -1,7 +1,7 @@
 function addMotifAutre(mot, prerempli="") {
 	if ($(mot).val() == "Autre") {
 		$("#motif").after(
-			'<textarea required name="motif-autre" id="motif-autre" placeholder="Veuillez saisir le motif autre" class="form-control m-0 mt-2"></textarea>'
+			'<textarea name="motif-autre" id="motif-autre" placeholder="Veuillez saisir le motif autre" class="form-control m-0 mt-2"></textarea>'
 		);
 		document = new Document;
 		document.getElementById("motif-autre").innerHTML=prerempli;
@@ -160,3 +160,68 @@ function checkDateSaisieRapport() {
  	}
  }
 
+
+
+function promptMedoc(select){
+ 	if(select.val()=="default") {
+ 		return confirm("Vous enregistrez le rapport de visite sans présentation de médicament. Êtes vous sur ?");
+ 	}
+ 	else{
+ 		return true;
+ 	}
+}
+
+
+function promptEch(select){
+ 	if(!(select.checked)) {
+ 		return confirm("Vous enregistrez le rapport de visite sans echantillons offerts. Êtes vous sur ?");
+ 	}
+ 	else{
+ 		return true;
+ 	}
+}
+
+function checkObl(praticien, bilan, motif, datevis){
+	valPra=praticien.value;
+	valBilan=bilan.value;
+	valMot=motif.value;
+	valDate=datevis.value;
+
+	result=true;
+	chaine="Le formulaire ne peux pas être envoyé :";
+	if(valPra==""|!(/^\d+$/.test(valPra))){
+		chaine=chaine+"\nLe praticien n'est pas selectionné";
+		result=false;
+	}
+	if(valBilan==""){
+		chaine=chaine+"\nLe bilan n'est pas rempli";
+		result=false;
+	}
+	if(valMot==""|valMot=="default"){
+		chaine=chaine+"\nLe motif n'est pas selectionné";
+		result=false;
+	}
+	if(valDate==""){
+		chaine=chaine+"\nLa date n'est pas selectionnée";
+		result=false;
+	}
+	if(!result){
+		alert(chaine);
+	}
+	return result;
+}
+
+function checkAutre(definitif, motif) {
+	valDefinitif=definitif.checked;
+	valMot=motif.value;
+	result=true;
+	if(valMot=="Autre"&&valDefinitif){
+		document = new Document();
+		valMotAut = document.getElementById('motif-autre').value;
+		result=valMotAut!="";
+	}
+	if(!result){
+		alert("Le champ de saisie du motif Autre n'est pas rempli.");
+	}
+	return result;
+}

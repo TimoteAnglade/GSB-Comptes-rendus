@@ -38,7 +38,7 @@
                             <?php
                         }
                         ?>
-                    <label class="titre-formulaire" for="listepra">Filtrer par praticien</label>
+                    <label class="titre-formulaire" for="listepra">Filtrer par <?php if($titre[0]){ echo 'collaborateur'; } else { echo 'praticien'; }?></label>
                     <select name=<?php if($titre[0]){ echo '"collaborateur"'; } else { echo '"praticien"'; }?>
                     class="form-select mt-3"
                     <?php if(count($result)<=0){ echo 'disabled'; } ?>>

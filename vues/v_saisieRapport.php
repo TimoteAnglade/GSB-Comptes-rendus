@@ -1,10 +1,3 @@
-<?php 
-                    var_dump($medocs[13]['MED_DEPOTLEGAL']);
-                    var_dump($prerempli['med_depotlegal']);
-
-                    var_dump($medocs[13]['MED_DEPOTLEGAL']==$prerempli['med_depotlegal']);
-                    ?>
-
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-5 pt-4">
@@ -24,7 +17,7 @@
 
         ?></h1>
             <p class="text text-center">
-                <?php echo 'TITRE 2'; ?>
+                <?php echo 'Saisie d\'un rapport'; ?>
             </p>
         </div>
         <div class="row align-items-center justify-content-center">
@@ -43,14 +36,25 @@
                             echo '<div class="alert alert-warning" role="alert">Il n\'existe aucun rapports de visite correrspondant à ces critères </div>';
                         }
                 } ?>
-                <form action="" method="get" class="formulaire-recherche col-12 m-0">
+                <form onsubmit="document=new Document();
+                $test=promptMedoc($('#medoc'));
+                $test=$test&&promptEch(document.getElementById('redigerEtEchantillon'));
+                $test=$test&&checkObl(
+                document.getElementById('praticien'),
+                 document.getElementById('bilan'),
+                  document.getElementById('motif'),
+                    document.getElementById('dateVis')
+                                        );
+                $test=$test&&checkAutre(document.getElementById('def'),
+                  document.getElementById('motif'));
+                return $test;" action="" method="get" class="formulaire-recherche col-12 m-0">
                     <input type="text" name="uc" value="rapportdevisite" hidden>
                     <input type="text" name="action" value="confirmerRapport" hidden>
                     <input type="text" name="matricule" value="<?php echo $prerempli['matricule'];?>" hidden>
-                    <input type="text" name="rapport" value="<?php echo $prerempli['rap_num'].'';?>" hidden>
+                    <input type="text" name="rapport" value="<?php echo $prerempli['RAP_NUM'].'';?>" hidden>
 
                     <label class="titre-formulaire mt-3" for="praticien">Praticien :</label>
-                    <select name='praticien' class="form-select mt-3" required>
+                    <select id="praticien" name='praticien' class="form-select mt-3" >
                         <?php if(count($praticiens)){
                             ?>   <option class="text-center" value="default" hidden>
                                 Choisissez un praticien
@@ -96,10 +100,10 @@
                     </select>
 
                     <label class="titre-formulaire mt-3" for="bilanContent">Bilan du rapport</label>
-                    <input type="textarea" name="bilanContent" class="form-control" value=<?php echo '"'.$prerempli['rap_bilan'].'"'?>>
+                    <input type="textarea" name="bilanContent" class="form-control" id="bilan" value=<?php echo '"'.$prerempli['rap_bilan'].'"'?>>
 
                     <label class="titre-formulaire mt-3" for="dateVis">Date de la visite</label>
-                    <input required type="date" name="dateVis" value="<?php echo substr($prerempli['rap_date'], 0, 10);?>">
+                    <input  id="dateVis" type="date" name="dateVis" value="<?php echo substr($prerempli['rap_date'], 0, 10);?>">
 
                     <label for="medicamentproposer" id="labelMedoc" class="titre-formulaire mt-3">1er médicament présenté :</label>
                     <select id="medoc" name="medicamentproposer" id="medicamentproposer" class="form-select m-0" onchange="addMedicament(this)">
@@ -162,7 +166,6 @@
                             if($prerempli['mot_code']=="Autre"){
                                 ?>
                                     document.getElementById("motif-autre").innerHTML=<?php echo '"'.$prerempli['rap_motif_autre'].'"'?>;
-                                    console.log(<?php echo '"'.$prerempli['rap_motif_autre'].'"'?>);
                                 <?php
                             }
                             ?>
@@ -185,7 +188,7 @@
 
 
 
-                    <label for="echantillions" class="titre-formulaire mt-3">Echantillions :</label>
+                    <label for="echantillions" class="titre-formulaire mt-3">Echantillons :</label>
 
 
                     <input type="checkbox" name="echantillions" id="redigerEtEchantillon"
@@ -226,7 +229,7 @@
                     <div>
                     <div class="form-check">
                     <label class="form-check-label" for="br">brouillon</label>
-                    <input class="form-check-input" type="radio" name="brouillon" id="br" value="1" required>
+                    <input class="form-check-input" type="radio" name="brouillon" id="br" value="1" >
                     </div>
                     <div class="form-check">
                     <label class="form-check-label" for="def">publié</label>

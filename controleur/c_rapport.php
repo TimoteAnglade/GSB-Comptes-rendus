@@ -90,21 +90,21 @@ switch ($action) {
 				$i=0;
 				foreach($result as $key){
 					$data[$i] = array();
-					$data[$i][0] = $key['rap_num'];
-					$data[$i][1] = getPraticienRapport($key['rap_num'], $matricule);
-					$data[$i][2] = getNomPraticien(getPraticienRapport($key['rap_num'], $matricule));
-					$data[$i][3] = getMotifRapport($key['rap_num'], $matricule)['MOT_CODE'];
-					$data[$i][4] = getDateRapport($key['rap_num'], $matricule);
+					$data[$i][0] = $key['RAP_NUM'];
+					$data[$i][1] = getPraticienRapport($key['RAP_NUM'], $matricule);
+					$data[$i][2] = getNomPraticien(getPraticienRapport($key['RAP_NUM'], $matricule));
+					$data[$i][3] = getMotifRapport($key['RAP_NUM'], $matricule)['MOT_CODE'];
+					$data[$i][4] = getDateRapport($key['RAP_NUM'], $matricule);
 					$data[$i][5] = '';
-					$presente = getPresentesRapport($key['rap_num'], $matricule);
-					$presenteNom = getPresentesNomRapport($key['rap_num'], $matricule);
+					$presente = getPresentesRapport($key['RAP_NUM'], $matricule);
+					$presenteNom = getPresentesNomRapport($key['RAP_NUM'], $matricule);
 					if(!is_null($presente['MED_DEPOTLEGAL'])){
 						$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL'] . ' : ' . $presenteNom['med_nomcommercial1'] ;
 						if(!is_null($presente['MED_DEPOTLEGAL2'])){
 							$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL2'] . ' : ' . $presenteNom['med_nomcommercial2'] ;
 						}
 					}	
-					$data[$i][6]=estBrouillon($key['rap_num'], $matricule);
+					$data[$i][6]=estBrouillon($key['RAP_NUM'], $matricule);
 					$i++;		
 				}
 				$titre = array('Formulaire de vos rapports', 'Formulaire permettant d\'accéder aux rapports que vous avez rédigé et vos brouillons', 'Vos rapports :', 1);
@@ -127,16 +127,16 @@ switch ($action) {
 		$i=0;
 		foreach($result as $key){
 			$data[$i] = array();
-			$data[$i][0] = $key['rap_num'];
-			$data[$i][1] = getPraticienRapport($key['rap_num'], $key['col_matricule']);
-			$data[$i][2] = getNomPraticien(getPraticienRapport($key['rap_num'], $key['col_matricule']));
-			$data[$i][3] = getMotifRapport($key['rap_num'], $key['col_matricule'])['MOT_CODE'];
-			$data[$i][4] = getDateRapport($key['rap_num'], $key['col_matricule']);
+			$data[$i][0] = $key['RAP_NUM'];
+			$data[$i][1] = getPraticienRapport($key['RAP_NUM'], $key['col_matricule']);
+			$data[$i][2] = getNomPraticien(getPraticienRapport($key['RAP_NUM'], $key['col_matricule']));
+			$data[$i][3] = getMotifRapport($key['RAP_NUM'], $key['col_matricule'])['MOT_CODE'];
+			$data[$i][4] = getDateRapport($key['RAP_NUM'], $key['col_matricule']);
 			$data[$i][5] = '';
-			$data[$i][6] = estBrouillon($key['rap_num'], $key['col_matricule']);
+			$data[$i][6] = estBrouillon($key['RAP_NUM'], $key['col_matricule']);
 			$data[$i][7] = $key['col_matricule'];
-			$presente = getPresentesRapport($key['rap_num'], $key['col_matricule']);
-			$presenteNom = getPresentesNomRapport($key['rap_num'], $key['col_matricule']);
+			$presente = getPresentesRapport($key['RAP_NUM'], $key['col_matricule']);
+			$presenteNom = getPresentesNomRapport($key['RAP_NUM'], $key['col_matricule']);
 			if(!is_null($presente['MED_DEPOTLEGAL'])){
 				$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL'] . ' : ' . $presenteNom['med_nomcommercial1'] ;
 				if(!is_null($presente['MED_DEPOTLEGAL2'])){
@@ -175,21 +175,21 @@ switch ($action) {
 				$i=0;
 				foreach($result as $key){
 					$data[$i] = array();
-					$data[$i][0] = $key['rap_num'];
-					$data[$i][1] = getPraticienRapport($key['rap_num'], $key['col_matricule']);
-					$data[$i][2] = getNomPraticien(getPraticienRapport($key['rap_num'], $key['col_matricule']));
-					$data[$i][3] = getMotifRapport($key['rap_num'], $key['col_matricule'])['MOT_CODE'];
-					$data[$i][4] = getDateRapport($key['rap_num'], $key['col_matricule']);
+					$data[$i][0] = $key['RAP_NUM'];
+					$data[$i][1] = getPraticienRapport($key['RAP_NUM'], $key['col_matricule']);
+					$data[$i][2] = getNomPraticien(getPraticienRapport($key['RAP_NUM'], $key['col_matricule']));
+					$data[$i][3] = getMotifRapport($key['RAP_NUM'], $key['col_matricule'])['MOT_CODE'];
+					$data[$i][4] = getDateRapport($key['RAP_NUM'], $key['col_matricule']);
 					$data[$i][5] = '';
-					$presente = getPresentesRapport($key['rap_num'], $key['col_matricule']);
-					$presenteNom = getPresentesNomRapport($key['rap_num'], $key['col_matricule']);
+					$presente = getPresentesRapport($key['RAP_NUM'], $key['col_matricule']);
+					$presenteNom = getPresentesNomRapport($key['RAP_NUM'], $key['col_matricule']);
 					if(!is_null($presente['MED_DEPOTLEGAL'])){
 						$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL'] . ' : ' . $presenteNom['med_nomcommercial1'] ;
 						if(!is_null($presente['MED_DEPOTLEGAL2'])){
 							$data[$i][5] = $data[$i][5] . ' | ' . $presente['MED_DEPOTLEGAL2'] . ' : ' . $presenteNom['med_nomcommercial2'] ;
 						}
 					}	
-					$data[$i][6]=estBrouillon($key['rap_num'], $key['col_matricule']);
+					$data[$i][6]=estBrouillon($key['RAP_NUM'], $key['col_matricule']);
 					$data[$i][7] = $key['col_matricule'];
 					$i++;		
 				}
@@ -248,7 +248,7 @@ switch ($action) {
 			$region = getRegionCollaborateur($matricule);
 			$praticiens=getInfoPraticienParRegion($region);
 			if($isRapport){
-				if(estBrouillon($_REQUEST['rapport'], $matricule)){
+				if((estBrouillon($_REQUEST['rapport'], $matricule))){
 					$rapport=$_REQUEST['rapport'];
 					$prerempli = getContenuRapport($rapport, $matricule);
 					$prerempli['matricule'] = $matricule;
@@ -271,7 +271,7 @@ switch ($action) {
 			if($isNew){
 				$prerempli = array(
 					'matricule' => $matricule,
-					'rap_num' => "", 
+					'RAP_NUM' => "", 
 					'col_nom' => "", 
 					'col_prenom' => "", 
 					'pra_num_praticien' => "", 
@@ -341,9 +341,9 @@ switch ($action) {
 			$praticien = "";
 		}
 		
-		if(isset($_REQUEST['praticienremp'])&&!($_REQUEST['praticienremp']=="default")){
+		if(isset($_REQUEST['praticienremp'])){
 			$praticienremp = $_REQUEST['praticienremp'];
-			if($praticienremp!="default"){
+			if($praticienremp!="default"&&$praticienremp!=$praticien){
 				$praticienremp = $_REQUEST['praticienremp'];	
 			}
 			else{
@@ -374,7 +374,12 @@ switch ($action) {
 		}
 		
 		if(isset($_REQUEST['medicamentproposer2'])){
-			$medicamentproposer2 = $_REQUEST['medicamentproposer2'];
+			if($_REQUEST['medicamentproposer2']!="default"){
+				$medicamentproposer2 = $_REQUEST['medicamentproposer2'];	
+			}
+			else{
+				$medicamentproposer2 = "";
+			}
 		}
 		else{
 			$medicamentproposer2 = "";

@@ -33,6 +33,9 @@
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=choisirDateMesRapports">Mes rapports par période</a>
                         </li>
+                        <li class="nav-item ">
+                            <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=listeBrouillons">Rédiger un rapport</a>
+                        </li>
                         <?php }?>
                         <li class="nav-item ">
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=voirMesRapports">Mes Rapports</a>
