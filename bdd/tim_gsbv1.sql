@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : dim. 07 mai 2023 à 10:31
+-- Généré le : lun. 08 mai 2023 à 13:45
 -- Version du serveur : 10.6.11-MariaDB
 -- Version de PHP : 8.0.26
 
@@ -50,18 +50,6 @@ CREATE TABLE IF NOT EXISTS `a_lu_rapport` (
   `RAP_NUM` int(11) NOT NULL,
   PRIMARY KEY (`COL_MATRICULE_LECTEUR`,`COL_MATRICULE_REDACTEUR`,`RAP_NUM`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Déchargement des données de la table `a_lu_rapport`
---
-
-INSERT INTO `a_lu_rapport` (`COL_MATRICULE_LECTEUR`, `COL_MATRICULE_REDACTEUR`, `RAP_NUM`) VALUES
-('a131', 'a131', 3),
-('a131', 'a131', 7),
-('a17', 'a17', 4),
-('a234', 'a131', 3),
-('a234', 'a17', 8),
-('a234', 'a234', 3);
 
 -- --------------------------------------------------------
 
@@ -559,12 +547,12 @@ CREATE TABLE IF NOT EXISTS `offrir` (
 --
 
 INSERT INTO `offrir` (`RAP_NUM`, `COL_MATRICULE`, `MED_DEPOTLEGAL`, `OFF_QTE`) VALUES
-(3, 'a131', 'BACTIG10', 4),
-(3, 'a131', 'CLAZER6', 465),
-(3, 'a131', 'EVILR7', 6),
-(3, 'a131', 'PARMOL16', 5),
 (4, 'a17', '3MYC7', 3),
-(4, 'a17', 'AMOX45', 12);
+(4, 'a17', 'AMOX45', 12),
+(8, 'a131', 'EQUILARX6', 2),
+(8, 'a131', 'INSXT5', 1),
+(9, 'a131', 'AMOPIL7', 2),
+(9, 'a131', 'EVILR7', 1);
 
 -- --------------------------------------------------------
 
@@ -761,8 +749,8 @@ CREATE TABLE IF NOT EXISTS `rapport_visite` (
 --
 
 INSERT INTO `rapport_visite` (`COL_MATRICULE`, `RAP_NUM`, `PRA_NUM_PRATICIEN`, `PRA_NUM_REMPLACANT`, `RAP_DATE`, `RAP_DATE_VIS`, `RAP_BILAN`, `MOT_CODE`, `RAP_MOTIF_AUTRE`, `rap_brouillon`, `MED_DEPOTLEGAL`, `MED_DEPOTLEGAL2`) VALUES
-('a131', 3, 18, 23, '2023-05-07 00:00:00', '2023-05-07', 'Médecin curieux, à recontacter en décembre pour réunion', 'Autre', 'Actualisation annuelle', 1, 'APATOUX22', 'BACTIV13'),
-('a131', 7, 41, NULL, '2003-03-23 00:00:00', '0000-00-00', 'RAS\r\nChangement de tel : 05 89 89 89 89', 'Autre', 'Rapport Annuel', 0, NULL, NULL),
+('a131', 3, 23, NULL, '2023-05-03 00:00:00', '2023-05-08', 'Médecin curieux, à recontacter en décembre pour réunion', 'Autre', 'Actualisation annuelle', 1, 'APATOUX22', NULL),
+('a131', 7, 41, NULL, '2003-03-23 00:00:00', '0000-00-00', 'RAS\r\nChangement de tel : 05 89 89 89 89', 'Autre', 'Rapport Annuel', 0, 'BACTIV13', NULL),
 ('a17', 4, 4, NULL, '2003-05-21 00:00:00', '0000-00-00', 'Changement de direction, redéfinition de la politique médicamenteuse, recours au générique', 'Autre', 'Baisse activité', 0, NULL, NULL),
 ('a17', 8, 63, 12, '2017-04-17 09:11:32', '0000-00-00', 'Je suis allé le voir pour lui faire un gros calin', 'Autre', 'Je sais pas comment qualifier ça honnêtement', 1, 'DIMIRTAM6', 'EQUILARX6');
 
