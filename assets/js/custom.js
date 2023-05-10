@@ -226,6 +226,9 @@ function checkAutre(definitif, motif) {
 	return result;
 }
 
+
+//fonctions pour la gestion praticien
+
 function validateFormPraticien() {
         rep = true ;
         if ( document.forms['praticien']['type'].value == '' ) { 
@@ -276,7 +279,7 @@ function validateFormPraticien() {
                 i2.setAttribute("name",id + "coef");
                 i2.setAttribute("type","number");
                 i2.setAttribute("value","0");
-                i2.setAttribute("step","0.5");
+                i2.setAttribute("step","0.01");
                 i2.setAttribute("min","0");
                 i2.setAttribute("class","form-control");
                 tdb3.appendChild(i2);
