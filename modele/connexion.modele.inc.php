@@ -2,9 +2,7 @@
 
 include_once 'bd.inc.php';
 
-function getAllInformationCompte($matricule)
-{
-
+function getAllInformationCompte($matricule) {
     try {
         $monPdo = connexionPDO();
         $req = 'SELECT c.`COL_MATRICULE` as `matricule`,
@@ -34,8 +32,7 @@ function getAllInformationCompte($matricule)
     }
 }
 
-function getSecteurCollaborateur($matricule)
-{
+function getSecteurCollaborateur($matricule) {
     try {
         $monPdo = connexionPDO();
         $req = 'SELECT `SEC_LIBELLE` 
@@ -53,8 +50,7 @@ function getSecteurCollaborateur($matricule)
     }
 }
 
-function getRegionCollaborateur($matricule)
-{
+function getRegionCollaborateur($matricule) {
     try {
         $monPdo = connexionPDO();
         $req = 'SELECT `REG_CODE` 
@@ -69,9 +65,7 @@ function getRegionCollaborateur($matricule)
     }
 }
 
-function checkConnexion($username, $mdp)
-{
-
+function checkConnexion($username, $mdp) {
     try {
         $getInfo = connexionPDO();
         $req = $getInfo->prepare('SELECT l.LOG_ID as \'id_log\', l.COL_MATRICULE as \'matricule\', c.HAB_ID as \'habilitation\' FROM login l INNER JOIN collaborateur c ON l.COL_MATRICULE = c.COL_MATRICULE WHERE l.LOG_LOGIN = :identifiant AND l.LOG_MOTDEPASSE = "' . hash('sha512', $mdp) . '"');
@@ -86,9 +80,7 @@ function checkConnexion($username, $mdp)
     }
 }
 
-function checkMatriculeInscription($matricule)
-{
-
+function checkMatriculeInscription($matricule) {
     try {
         $getInfo = connexionPDO();
         $req = $getInfo->prepare('select `COL_MATRICULE` as \'matricule\' from login where `COL_MATRICULE`=:matricule');
@@ -103,9 +95,7 @@ function checkMatriculeInscription($matricule)
     }
 }
 
-function checkMatricule($matricule)
-{
-
+function checkMatricule($matricule) {
     try {
         $getInfo = connexionPDO();
         $req = $getInfo->prepare('select `COL_MATRICULE` as \'matricule\' from collaborateur where `COL_MATRICULE`=:matricule');
@@ -120,9 +110,7 @@ function checkMatricule($matricule)
     }
 }
 
-function checkUserInscription($username)
-{
-
+function checkUserInscription($username) {
     try {
         $getInfo = connexionPDO();
         $req = $getInfo->prepare('SELECT `LOG_LOGIN` from login where `LOG_LOGIN`=:username');
@@ -137,9 +125,7 @@ function checkUserInscription($username)
     }
 }
 
-function getAllMatriculeCollaborateur()
-{
-
+function getAllMatriculeCollaborateur() {
     try {
 
         $monPdo = connexionPDO();
@@ -154,9 +140,7 @@ function getAllMatriculeCollaborateur()
     }
 }
 
-function getColMatricule()
-{
-
+function getColMatricule() {
     try {
 
         $monPdo = connexionPDO();
@@ -171,9 +155,7 @@ function getColMatricule()
     }
 }
 
-function getCountMatricule()
-{
-
+function getCountMatricule() {
     try {
 
         $monPdo = connexionPDO();
