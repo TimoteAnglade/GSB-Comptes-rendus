@@ -11,7 +11,7 @@ function getAllInformationCompte($matricule) {
         c.`COL_ADRESSE` as `adresse`,
         c.`COL_CP` as `cp`,
         c.`COL_VILLE` as `ville`,
-        concat(DAY(COL_DATEEMBAUCHE),\'/\',MONTH(`COL_DATEEMBAUCHE`),\'/\',YEAR(`COL_DATEEMBAUCHE`)) as `date_embauche`,
+        DATE_FORMAT(c.`COL_DATEEMBAUCHE`,\'%d/%m/%Y\') as `date_embauche`,
         h.`HAB_LIB` as `habilitation`,
         s.`SEC_LIBELLE` as `secteur`,
         r.`REG_NOM` as `region`,

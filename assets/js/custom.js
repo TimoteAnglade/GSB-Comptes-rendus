@@ -227,6 +227,7 @@ function checkAutre(definitif, motif) {
 }
 
 
+
 //fonctions pour la gestion praticien
 
 function validateFormPraticien() {
@@ -271,6 +272,7 @@ function validateFormPraticien() {
                 i1.setAttribute("name",id + "dip");
                 i1.setAttribute("class","form-control");
                 i1.setAttribute("required",true);
+                i1.setAttribute("maxlength","10");
                 tdb2.appendChild(i1);
 
                 tdb3 = document.createElement("td");
@@ -415,6 +417,7 @@ function validateFormPraticien() {
                 i1.setAttribute("name",key + "dip");
                 i1.setAttribute("class","form-control");
                 i1.setAttribute("required",true);
+                i1.setAttribute("maxlength","10");
                 tdb2.appendChild(i1);
 
                 tdb3 = document.createElement("td");
@@ -423,7 +426,7 @@ function validateFormPraticien() {
                 i2.setAttribute("id",key + "coef");
                 i2.setAttribute("name",key + "coef");
                 i2.setAttribute("type","number");
-                i2.setAttribute("step","0.5");
+                i2.setAttribute("step","0.01");
                 i2.setAttribute("min","0");
                 i2.setAttribute("class","form-control");
                 tdb3.appendChild(i2);

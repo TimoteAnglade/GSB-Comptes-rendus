@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `a_lu_rapport` (
   `COL_MATRICULE_REDACTEUR` varchar(50) NOT NULL,
   `RAP_NUM` int(11) NOT NULL,
   PRIMARY KEY (`COL_MATRICULE_LECTEUR`,`COL_MATRICULE_REDACTEUR`,`RAP_NUM`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 

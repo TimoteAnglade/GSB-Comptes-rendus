@@ -53,7 +53,7 @@
                                     }
                             ?>
                             </select>
-                            <input class="form-control" id="cp" name="cp" pattern="[0-9]{3}" value="<?php echo $cp ; ?>" title="Donner les trois derniers chiffres du code postal (ex: 450)" class="form-control">
+                            <input class="form-control" id="cp" name="cp" pattern="[0-9]{3}" value="<?php echo $cp ; ?>" title="Donner les trois derniers chiffres du code postal (ex: 450)" maxlenght="3" class="form-control">
                         </div>
                     </div>
                     <div class="form-group mb-2">
